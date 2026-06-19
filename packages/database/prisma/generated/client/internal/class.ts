@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.8.0",
   "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
   "activeProvider": "postgresql",
-  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated/client\"\n}\n\nmodel User {\n  id           String    @id @default(uuid())\n  email        String    @unique\n  passwordHash String\n  monitors     Monitor[]\n  createdAt    DateTime  @default(now())\n}\n\nmodel Monitor {\n  id              String          @id @default(uuid())\n  userId          String\n  user            User            @relation(fields: [userId], references: [id])\n  url             String\n  intervalSeconds Int             @default(60)\n  isActive        Boolean         @default(true)\n  results         MonitorResult[]\n  createdAt       DateTime        @default(now())\n}\n\nmodel MonitorResult {\n  id             String   @id @default(uuid())\n  monitorId      String\n  monitor        Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)\n  responseTimeMs Int\n  statusCode     Int?\n  isUp           Boolean\n  errorMessage   String?\n  createdAt      DateTime @default(now())\n\n  @@index([monitorId, createdAt(sort: Desc)])\n}\n",
+  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated/client\"\n  moduleFormat = \"cjs\"\n}\n\nmodel User {\n  id           String    @id @default(uuid())\n  email        String    @unique\n  passwordHash String\n  monitors     Monitor[]\n  createdAt    DateTime  @default(now())\n}\n\nmodel Monitor {\n  id              String          @id @default(uuid())\n  userId          String\n  user            User            @relation(fields: [userId], references: [id])\n  url             String\n  intervalSeconds Int             @default(60)\n  isActive        Boolean         @default(true)\n  results         MonitorResult[]\n  createdAt       DateTime        @default(now())\n}\n\nmodel MonitorResult {\n  id             String   @id @default(uuid())\n  monitorId      String\n  monitor        Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)\n  responseTimeMs Int\n  statusCode     Int?\n  isUp           Boolean\n  errorMessage   String?\n  createdAt      DateTime @default(now())\n\n  @@index([monitorId, createdAt(sort: Desc)])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -45,10 +45,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js")
     return await decodeBase64AsWasm(wasm)
   },
 

@@ -15,7 +15,8 @@
     "db:generate": "dotenv -- npm run db:generate --workspace=@statpulse/database",
     "db:build": "dotenv -- npm run build --workspace=@statpulse/database",
     "db:migrate": "dotenv -- npm run db:migrate --workspace=@statpulse/database",
-    "db:studio": "dotenv -- npm run db:studio --workspace=@statpulse/database"
+    "db:studio": "dotenv -- npm run db:studio --workspace=@statpulse/database",
+    "worker:dev": "npm run dev --workspace=@statpulse/worker"
   },
   "workspaces": [
     "apps/*",
