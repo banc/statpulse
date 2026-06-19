@@ -31,7 +31,7 @@ pnpm-debug.log*
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Prisma / Database generated artifacts
-/packages/database/generated/
+/packages/database/dist/
 
 # OS Files
 .DS_Store

@@ -7,10 +7,21 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "docker:up": "dotenv -e .env docker-compose -f docker-compose.dev.yml up -d",
+    "docker:down": "docker-compose -f docker-compose.dev.yml down",
+    "db:generate": "dotenv -- npm run db:generate --workspace=@statpulse/database",
+    "db:build": "dotenv -- npm run build --workspace=@statpulse/database",
+    "db:migrate": "dotenv -- npm run db:migrate --workspace=@statpulse/database",
+    "db:studio": "dotenv -- npm run db:studio --workspace=@statpulse/database"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0"
+  }
 }
