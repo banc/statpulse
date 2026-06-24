@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests configured yet\"",
+    "lint": "eslint"
   },
   "dependencies": {
     "@statpulse/database": "1.0.0",
