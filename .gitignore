@@ -26,6 +26,8 @@ pnpm-debug.log*
 .env.production.local
 *.env
 *.env.local
+!.env.example
+!.env.container.example
 
 # Diagnostic reports (Crashed node apps)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
