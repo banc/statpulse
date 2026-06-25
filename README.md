@@ -34,7 +34,7 @@ Install the following tools:
 
 - Node.js 22
 - npm
-- Docker with Docker Compose
+- Apple container on macOS, or Docker with Docker Compose as a fallback
 
 If you use `nvm`, activate the project version:
 
@@ -48,7 +48,7 @@ Verify the installed tools:
 ```bash
 node --version
 npm --version
-docker compose version
+container --version
 ```
 
 ## Local Setup
@@ -63,25 +63,56 @@ Create the local environment file:
 
 ```bash
 cp .env.example .env
+cp .env.container.example .env.container
 ```
 
 The expected local configuration is:
 
 ```env
-DATABASE_URL=postgresql://postgres:local_password@localhost:5432/statpulse_dev
+DATABASE_URL=postgresql://statpulse:statpulse_local_password@localhost:5432/statpulse_dev
 REDIS_URL=redis://localhost:6379
 PORT=3001
+REQUEST_TIMEOUT_MS=10000
+```
+
+The `.env.container` file is used only by Apple container to initialize the local PostgreSQL container:
+
+```env
+POSTGRES_USER=statpulse
+POSTGRES_PASSWORD=statpulse_local_password
+POSTGRES_DB=statpulse_dev
 ```
 
 The API currently reads `PORT` and defaults to port `3001` when it is not set.
 
-Start PostgreSQL and Redis:
+Start PostgreSQL and Redis with Apple container:
+
+```bash
+npm run container:system:start
+npm run container:up
+```
+
+If you previously created the PostgreSQL container with different credentials, recreate the container and its local volume before switching to the new `.env.container` values.
+
+Check that both containers are running:
+
+```bash
+npm run container:ps
+```
+
+If the containers already exist but are stopped, start them again with:
+
+```bash
+npm run container:start
+```
+
+Docker Compose is still available as a fallback:
 
 ```bash
 npm run docker:up
 ```
 
-Check that both containers are running:
+Check Docker Compose containers:
 
 ```bash
 docker compose -f docker-compose.dev.yml ps
@@ -121,6 +152,36 @@ The applications are available at:
 - Frontend: <http://localhost:3000>
 - API health endpoint: <http://localhost:3001/health>
 
+## Testing the Monitoring MVP Manually
+
+Create a monitor:
+
+```bash
+curl -X POST http://localhost:3001/monitors \
+  -H 'Content-Type: application/json' \
+  -d '{"url":"https://example.com","intervalSeconds":60}'
+```
+
+List monitors and their latest result:
+
+```bash
+curl http://localhost:3001/monitors
+```
+
+Read recent results for a monitor:
+
+```bash
+curl 'http://localhost:3001/monitors/<monitor-id>/results?limit=20'
+```
+
+Pause a monitor:
+
+```bash
+curl -X PATCH http://localhost:3001/monitors/<monitor-id> \
+  -H 'Content-Type: application/json' \
+  -d '{"isActive":false}'
+```
+
 ## Development Commands
 
 ```bash
@@ -145,6 +206,12 @@ npm run db:studio
 To stop the local infrastructure:
 
 ```bash
+npm run container:down
+```
+
+If you use Docker Compose instead, run:
+
+```bash
 npm run docker:down
 ```
 
@@ -152,8 +219,8 @@ npm run docker:down
 
 ```text
 Backend API
-  -> reads monitors from PostgreSQL
-  -> sends monitoring jobs to Redis
+  -> manages monitors through HTTP endpoints
+  -> creates one BullMQ repeatable job per active monitor
   -> BullMQ worker performs HTTP requests
   -> worker stores results in PostgreSQL
 ```
@@ -162,11 +229,11 @@ Backend API
 
 - Only basic HTTP monitoring is implemented.
 - The frontend is still the default Next.js starter page.
-- Authentication and monitor management endpoints are not implemented.
+- Monitor management currently uses a development-only user instead of authentication.
 - Alert notifications are not implemented.
 - PostgreSQL is used without TimescaleDB.
 - Automated tests are not implemented yet.
-- The periodic scheduler still requires further development.
+- SSRF protection is not implemented yet, so do not expose the API publicly.
 
 ## Planned Development
 
@@ -174,7 +241,7 @@ The next milestones are:
 
 1. Stabilize the local environment and CI pipeline.
 2. Implement reliable per-monitor scheduling.
-3. Add authentication and monitor CRUD endpoints.
+3. Add authentication and connect monitors to real users.
 4. Add URL validation and SSRF protection.
 5. Introduce TimescaleDB for monitoring metrics.
 6. Add incidents and Telegram or email notifications.

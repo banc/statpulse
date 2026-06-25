@@ -1,23 +1,36 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
 const bullmq_1 = require("bullmq");
 const database_1 = require("@statpulse/database");
-const dotenv_1 = __importDefault(require("dotenv"));
-const path_1 = __importDefault(require("path"));
-dotenv_1.default.config({ path: path_1.default.resolve(process.cwd(), '.env') });
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
+const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
+function isMonitorJobData(data) {
+    return (typeof data === 'object' &&
+        data !== null &&
+        'monitorId' in data &&
+        'url' in data &&
+        typeof data.monitorId === 'string' &&
+        typeof data.url === 'string');
+}
+function getErrorMessage(error) {
+    if (error instanceof Error) {
+        return error.name === 'AbortError' ? 'Timeout' : error.message;
+    }
+    return 'Unknown error';
+}
 console.log('🚀 StatPulse background worker started...');
 // Initialize BullMQ Worker
 const worker = new bullmq_1.Worker('monitor-tasks', async (job) => {
+    if (!isMonitorJobData(job.data)) {
+        throw new Error('Invalid monitor job payload');
+    }
     const { monitorId, url } = job.data;
     console.log(`[Job ${job.id}] Checking site: ${url}`);
     const startTime = performance.now();
     try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
         const response = await fetch(url, {
             method: 'GET',
             signal: controller.signal,
@@ -39,7 +52,7 @@ const worker = new bullmq_1.Worker('monitor-tasks', async (job) => {
     }
     catch (error) {
         const responseTimeMs = Math.round(performance.now() - startTime);
-        const errorMessage = error.name === 'AbortError' ? 'Timeout' : error.message;
+        const errorMessage = getErrorMessage(error);
         // Site is down or unavailable (DNS error, timeout, etc.)
         await database_1.prisma.monitorResult.create({
             data: {
