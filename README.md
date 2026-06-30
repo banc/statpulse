@@ -28,6 +28,26 @@ packages/
   database/      Prisma schema, migrations, and shared database client
 ```
 
+## Backend API Architecture
+
+The API is split into small layers:
+
+```text
+src/
+  config/             environment configuration
+  infrastructure/     external adapters such as BullMQ queues
+  modules/            business modules grouped by domain
+    monitors/
+      *.routes.ts       HTTP route definitions
+      *.controller.ts   Express request/response mapping
+      *.service.ts      business use cases
+      *.repository.ts   database access
+      *.validation.ts   input normalization and validation
+  shared/             reusable HTTP and error helpers
+  app.ts              Express app composition
+  index.ts            process entrypoint
+```
+
 ## Prerequisites
 
 Install the following tools:
