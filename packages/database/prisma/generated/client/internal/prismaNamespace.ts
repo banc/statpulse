@@ -386,7 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Monitor: 'Monitor',
-  MonitorResult: 'MonitorResult'
+  MonitorResult: 'MonitorResult',
+  Incident: 'Incident'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "monitor" | "monitorResult"
+    modelProps: "user" | "monitor" | "monitorResult" | "incident"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Incident: {
+      payload: Prisma.$IncidentPayload<ExtArgs>
+      fields: Prisma.IncidentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IncidentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IncidentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        findFirst: {
+          args: Prisma.IncidentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IncidentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        findMany: {
+          args: Prisma.IncidentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>[]
+        }
+        create: {
+          args: Prisma.IncidentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        createMany: {
+          args: Prisma.IncidentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IncidentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>[]
+        }
+        delete: {
+          args: Prisma.IncidentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        update: {
+          args: Prisma.IncidentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        deleteMany: {
+          args: Prisma.IncidentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IncidentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IncidentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>[]
+        }
+        upsert: {
+          args: Prisma.IncidentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IncidentPayload>
+        }
+        aggregate: {
+          args: Prisma.IncidentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIncident>
+        }
+        groupBy: {
+          args: Prisma.IncidentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IncidentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IncidentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IncidentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -680,9 +755,16 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const MonitorScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  name: 'name',
   url: 'url',
+  type: 'type',
+  method: 'method',
+  expectedStatus: 'expectedStatus',
   intervalSeconds: 'intervalSeconds',
+  timeoutMs: 'timeoutMs',
+  status: 'status',
   isActive: 'isActive',
+  lastCheckedAt: 'lastCheckedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -700,6 +782,19 @@ export const MonitorResultScalarFieldEnum = {
 } as const
 
 export type MonitorResultScalarFieldEnum = (typeof MonitorResultScalarFieldEnum)[keyof typeof MonitorResultScalarFieldEnum]
+
+
+export const IncidentScalarFieldEnum = {
+  id: 'id',
+  monitorId: 'monitorId',
+  startedAt: 'startedAt',
+  resolvedAt: 'resolvedAt',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typeof IncidentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -761,6 +856,34 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'MonitorType'
+ */
+export type EnumMonitorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MonitorType'>
+    
+
+
+/**
+ * Reference to a field of type 'MonitorType[]'
+ */
+export type ListEnumMonitorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MonitorType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'HttpMethod'
+ */
+export type EnumHttpMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HttpMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'HttpMethod[]'
+ */
+export type ListEnumHttpMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HttpMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -771,6 +894,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MonitorStatus'
+ */
+export type EnumMonitorStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MonitorStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MonitorStatus[]'
+ */
+export type ListEnumMonitorStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MonitorStatus[]'>
     
 
 
@@ -907,6 +1044,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   monitor?: Prisma.MonitorOmit
   monitorResult?: Prisma.MonitorResultOmit
+  incident?: Prisma.IncidentOmit
 }
 
 /* Types for Logging */

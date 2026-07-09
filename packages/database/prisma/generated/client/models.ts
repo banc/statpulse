@@ -11,4 +11,5 @@
 export type * from './models/User.js'
 export type * from './models/Monitor.js'
 export type * from './models/MonitorResult.js'
+export type * from './models/Incident.js'
 export type * from './commonInputTypes.js'

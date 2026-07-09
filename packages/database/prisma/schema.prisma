@@ -16,15 +16,40 @@ model User {
   createdAt    DateTime  @default(now())
 }
 
+enum MonitorType {
+  HTTP
+}
+
+enum HttpMethod {
+  GET
+  HEAD
+}
+
+enum MonitorStatus {
+  UNKNOWN
+  UP
+  DOWN
+}
+
 model Monitor {
   id              String          @id @default(uuid())
   userId          String
   user            User            @relation(fields: [userId], references: [id])
+  name            String?
   url             String
+  type            MonitorType     @default(HTTP)
+  method          HttpMethod      @default(GET)
+  expectedStatus  Int             @default(200)
   intervalSeconds Int             @default(60)
+  timeoutMs       Int             @default(10000)
+  status          MonitorStatus   @default(UNKNOWN)
   isActive        Boolean         @default(true)
+  lastCheckedAt   DateTime?
   results         MonitorResult[]
+  incidents       Incident[]
   createdAt       DateTime        @default(now())
+
+  @@index([userId, status])
 }
 
 model MonitorResult {
@@ -38,4 +63,18 @@ model MonitorResult {
   createdAt      DateTime @default(now())
 
   @@index([monitorId, createdAt(sort: Desc)])
+}
+
+model Incident {
+  id         String    @id @default(uuid())
+  monitorId  String
+  monitor    Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  startedAt  DateTime  @default(now())
+  resolvedAt DateTime?
+  reason     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([monitorId, resolvedAt])
+  @@index([monitorId, startedAt(sort: Desc)])
 }

@@ -9,7 +9,25 @@
 * 🟢 You can import this file directly.
 */
 
+export const MonitorType = {
+  HTTP: 'HTTP'
+} as const
+
+export type MonitorType = (typeof MonitorType)[keyof typeof MonitorType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const HttpMethod = {
+  GET: 'GET',
+  HEAD: 'HEAD'
+} as const
+
+export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod]
+
+
+export const MonitorStatus = {
+  UNKNOWN: 'UNKNOWN',
+  UP: 'UP',
+  DOWN: 'DOWN'
+} as const
+
+export type MonitorStatus = (typeof MonitorStatus)[keyof typeof MonitorStatus]

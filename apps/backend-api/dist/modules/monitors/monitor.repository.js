@@ -5,6 +5,7 @@ exports.createMonitor = createMonitor;
 exports.updateMonitor = updateMonitor;
 exports.deleteMonitor = deleteMonitor;
 exports.listMonitorResults = listMonitorResults;
+exports.listMonitorIncidents = listMonitorIncidents;
 exports.listActiveMonitorSchedulerData = listActiveMonitorSchedulerData;
 const database_1 = require("@statpulse/database");
 function listUserMonitorsWithLatestResult(userId) {
@@ -45,13 +46,23 @@ function listMonitorResults(monitorId, limit) {
         take: limit,
     });
 }
+function listMonitorIncidents(monitorId, limit) {
+    return database_1.prisma.incident.findMany({
+        where: { monitorId },
+        orderBy: { startedAt: 'desc' },
+        take: limit,
+    });
+}
 function listActiveMonitorSchedulerData() {
     return database_1.prisma.monitor.findMany({
         where: { isActive: true },
         select: {
             id: true,
             url: true,
+            method: true,
+            expectedStatus: true,
             intervalSeconds: true,
+            timeoutMs: true,
             isActive: true,
         },
     });

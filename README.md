@@ -101,6 +101,7 @@ The `.env.container` file is used only by Apple container to initialize the loca
 POSTGRES_USER=statpulse
 POSTGRES_PASSWORD=statpulse_local_password
 POSTGRES_DB=statpulse_dev
+PGDATA=/var/lib/postgresql/data/pgdata
 ```
 
 The API currently reads `PORT` and defaults to port `3001` when it is not set.
@@ -112,7 +113,7 @@ npm run container:system:start
 npm run container:up
 ```
 
-If you previously created the PostgreSQL container with different credentials, recreate the container and its local volume before switching to the new `.env.container` values.
+If you previously created the PostgreSQL container with different credentials, or without the `PGDATA` subdirectory, recreate the container and its local volume before switching to the new `.env.container` values.
 
 Check that both containers are running:
 
@@ -179,7 +180,7 @@ Create a monitor:
 ```bash
 curl -X POST http://localhost:3001/monitors \
   -H 'Content-Type: application/json' \
-  -d '{"url":"https://example.com","intervalSeconds":60}'
+  -d '{"name":"Example","url":"https://example.com","method":"GET","expectedStatus":200,"intervalSeconds":60,"timeoutMs":10000}'
 ```
 
 List monitors and their latest result:
@@ -192,6 +193,12 @@ Read recent results for a monitor:
 
 ```bash
 curl 'http://localhost:3001/monitors/<monitor-id>/results?limit=20'
+```
+
+Read recent incidents for a monitor:
+
+```bash
+curl 'http://localhost:3001/monitors/<monitor-id>/incidents?limit=20'
 ```
 
 Pause a monitor:
@@ -248,6 +255,7 @@ Backend API
 ## Current Limitations
 
 - Only basic HTTP monitoring is implemented.
+- Monitor state and incidents are implemented for UP/DOWN transitions.
 - The frontend is still the default Next.js starter page.
 - Monitor management currently uses a development-only user instead of authentication.
 - Alert notifications are not implemented.
@@ -255,15 +263,6 @@ Backend API
 - Automated tests are not implemented yet.
 - SSRF protection is not implemented yet, so do not expose the API publicly.
 
-## Planned Development
+## Development Plan
 
-The next milestones are:
-
-1. Stabilize the local environment and CI pipeline.
-2. Implement reliable per-monitor scheduling.
-3. Add authentication and connect monitors to real users.
-4. Add URL validation and SSRF protection.
-5. Introduce TimescaleDB for monitoring metrics.
-6. Add incidents and Telegram or email notifications.
-7. Build the monitoring dashboard.
-8. Add automated tests, observability, and deployment configuration.
+The local working roadmap lives in `PLAN.MD`.

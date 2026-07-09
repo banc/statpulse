@@ -17,9 +17,11 @@ pnpm-debug.log*
 .pnpm-debug.log*
 *.db
 *.db-journal
+PLAN.MD
 
 # Environment variables & Secrets
 .env
+.env.container
 .env.local
 .env.development.local
 .env.test.local

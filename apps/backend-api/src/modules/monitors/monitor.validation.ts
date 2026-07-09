@@ -2,6 +2,10 @@ import { AppError } from '../../shared/errors/app-error';
 
 const MIN_INTERVAL_SECONDS = 30;
 const DEFAULT_INTERVAL_SECONDS = 60;
+const MIN_TIMEOUT_MS = 1000;
+const MAX_TIMEOUT_MS = 30000;
+const DEFAULT_TIMEOUT_MS = 10000;
+const DEFAULT_EXPECTED_STATUS = 200;
 
 export function normalizeUrl(value: unknown) {
   if (typeof value !== 'string' || value.trim().length === 0) {
@@ -35,6 +39,68 @@ export function normalizeIntervalSeconds(value: unknown) {
   }
 
   return intervalSeconds;
+}
+
+export function normalizeName(value: unknown) {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+
+  if (typeof value !== 'string') {
+    throw new AppError('name must be a string');
+  }
+
+  const name = value.trim();
+
+  if (name.length === 0) {
+    return undefined;
+  }
+
+  if (name.length > 120) {
+    throw new AppError('name must be 120 characters or less');
+  }
+
+  return name;
+}
+
+export function normalizeHttpMethod(value: unknown) {
+  if (value === undefined) {
+    return 'GET';
+  }
+
+  if (value !== 'GET' && value !== 'HEAD') {
+    throw new AppError('method must be GET or HEAD');
+  }
+
+  return value;
+}
+
+export function normalizeExpectedStatus(value: unknown) {
+  if (value === undefined) {
+    return DEFAULT_EXPECTED_STATUS;
+  }
+
+  const expectedStatus = Number(value);
+
+  if (!Number.isInteger(expectedStatus) || expectedStatus < 100 || expectedStatus > 599) {
+    throw new AppError('expectedStatus must be a valid HTTP status code');
+  }
+
+  return expectedStatus;
+}
+
+export function normalizeTimeoutMs(value: unknown) {
+  if (value === undefined) {
+    return DEFAULT_TIMEOUT_MS;
+  }
+
+  const timeoutMs = Number(value);
+
+  if (!Number.isInteger(timeoutMs) || timeoutMs < MIN_TIMEOUT_MS || timeoutMs > MAX_TIMEOUT_MS) {
+    throw new AppError(`timeoutMs must be between ${MIN_TIMEOUT_MS} and ${MAX_TIMEOUT_MS}`);
+  }
+
+  return timeoutMs;
 }
 
 export function normalizeResultsLimit(value: unknown) {

@@ -3,6 +3,7 @@ import { asyncHandler } from '../../shared/http/async-handler';
 import {
   createMonitorController,
   deleteMonitorController,
+  listMonitorIncidentsController,
   listMonitorResultsController,
   listMonitorsController,
   updateMonitorController,
@@ -13,5 +14,6 @@ export const monitorRouter = Router();
 monitorRouter.get('/', asyncHandler(listMonitorsController));
 monitorRouter.post('/', asyncHandler(createMonitorController));
 monitorRouter.get('/:id/results', asyncHandler(listMonitorResultsController));
+monitorRouter.get('/:id/incidents', asyncHandler(listMonitorIncidentsController));
 monitorRouter.patch('/:id', asyncHandler(updateMonitorController));
 monitorRouter.delete('/:id', asyncHandler(deleteMonitorController));
