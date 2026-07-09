@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { getAuthContext } from '../auth/auth.middleware';
 import {
   createHttpMonitor,
   getMonitorIncidents,
@@ -8,13 +9,16 @@ import {
   updateHttpMonitor,
 } from './monitor.service';
 
-export async function listMonitorsController(_req: Request, res: Response) {
-  const monitors = await listMonitors();
+export async function listMonitorsController(req: Request, res: Response) {
+  const auth = getAuthContext(req);
+  const monitors = await listMonitors(auth.userId);
   res.json({ data: monitors });
 }
 
 export async function createMonitorController(req: Request, res: Response) {
+  const auth = getAuthContext(req);
   const monitor = await createHttpMonitor({
+    userId: auth.userId,
     name: req.body.name,
     url: req.body.url,
     method: req.body.method,
@@ -27,7 +31,9 @@ export async function createMonitorController(req: Request, res: Response) {
 }
 
 export async function listMonitorResultsController(req: Request, res: Response) {
+  const auth = getAuthContext(req);
   const results = await getMonitorResults({
+    userId: auth.userId,
     monitorId: req.params.id,
     limit: req.query.limit,
   });
@@ -36,7 +42,9 @@ export async function listMonitorResultsController(req: Request, res: Response) 
 }
 
 export async function listMonitorIncidentsController(req: Request, res: Response) {
+  const auth = getAuthContext(req);
   const incidents = await getMonitorIncidents({
+    userId: auth.userId,
     monitorId: req.params.id,
     limit: req.query.limit,
   });
@@ -45,7 +53,8 @@ export async function listMonitorIncidentsController(req: Request, res: Response
 }
 
 export async function updateMonitorController(req: Request, res: Response) {
-  const monitor = await updateHttpMonitor(req.params.id, {
+  const auth = getAuthContext(req);
+  const monitor = await updateHttpMonitor(auth.userId, req.params.id, {
     name: req.body.name,
     url: req.body.url,
     method: req.body.method,
@@ -59,6 +68,7 @@ export async function updateMonitorController(req: Request, res: Response) {
 }
 
 export async function deleteMonitorController(req: Request, res: Response) {
-  await removeHttpMonitor(req.params.id);
+  const auth = getAuthContext(req);
+  await removeHttpMonitor(auth.userId, req.params.id);
   res.status(204).send();
 }

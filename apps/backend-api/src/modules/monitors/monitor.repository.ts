@@ -49,23 +49,42 @@ export function updateMonitor(id: string, data: UpdateMonitorData) {
   });
 }
 
+export function findUserMonitorById(userId: string, monitorId: string) {
+  return prisma.monitor.findFirst({
+    where: {
+      id: monitorId,
+      userId,
+    },
+  });
+}
+
 export function deleteMonitor(id: string) {
   return prisma.monitor.delete({
     where: { id },
   });
 }
 
-export function listMonitorResults(monitorId: string, limit: number) {
+export function listMonitorResults(userId: string, monitorId: string, limit: number) {
   return prisma.monitorResult.findMany({
-    where: { monitorId },
+    where: {
+      monitorId,
+      monitor: {
+        userId,
+      },
+    },
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
 }
 
-export function listMonitorIncidents(monitorId: string, limit: number) {
+export function listMonitorIncidents(userId: string, monitorId: string, limit: number) {
   return prisma.incident.findMany({
-    where: { monitorId },
+    where: {
+      monitorId,
+      monitor: {
+        userId,
+      },
+    },
     orderBy: { startedAt: 'desc' },
     take: limit,
   });

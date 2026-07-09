@@ -1,7 +1,8 @@
-import { ensureDevUser } from '../dev-users/dev-user.service';
+import { AppError } from '../../shared/errors/app-error';
 import {
   createMonitor,
   deleteMonitor,
+  findUserMonitorById,
   listActiveMonitorSchedulerData,
   listMonitorIncidents,
   listMonitorResults,
@@ -20,9 +21,8 @@ import {
 } from './monitor.validation';
 import { enqueueImmediateMonitorCheck, removeMonitorScheduler, scheduleMonitor } from './monitor-scheduler.service';
 
-export async function listMonitors() {
-  const user = await ensureDevUser();
-  const monitors = await listUserMonitorsWithLatestResult(user.id);
+export async function listMonitors(userId: string) {
+  const monitors = await listUserMonitorsWithLatestResult(userId);
 
   return monitors.map((monitor) => ({
     ...monitor,
@@ -32,6 +32,7 @@ export async function listMonitors() {
 }
 
 export async function createHttpMonitor(input: {
+  userId: string;
   name: unknown;
   url: unknown;
   method: unknown;
@@ -39,9 +40,8 @@ export async function createHttpMonitor(input: {
   intervalSeconds: unknown;
   timeoutMs: unknown;
 }) {
-  const user = await ensureDevUser();
   const monitor = await createMonitor({
-    userId: user.id,
+    userId: input.userId,
     name: normalizeName(input.name),
     url: normalizeUrl(input.url),
     method: normalizeHttpMethod(input.method),
@@ -56,15 +56,30 @@ export async function createHttpMonitor(input: {
   return monitor;
 }
 
-export async function getMonitorResults(input: { monitorId: string; limit: unknown }) {
-  return listMonitorResults(input.monitorId, normalizeResultsLimit(input.limit));
+async function assertUserMonitor(userId: string, monitorId: string) {
+  const monitor = await findUserMonitorById(userId, monitorId);
+
+  if (!monitor) {
+    throw new AppError('Monitor not found', 404);
+  }
+
+  return monitor;
 }
 
-export async function getMonitorIncidents(input: { monitorId: string; limit: unknown }) {
-  return listMonitorIncidents(input.monitorId, normalizeResultsLimit(input.limit));
+export async function getMonitorResults(input: { userId: string; monitorId: string; limit: unknown }) {
+  await assertUserMonitor(input.userId, input.monitorId);
+
+  return listMonitorResults(input.userId, input.monitorId, normalizeResultsLimit(input.limit));
+}
+
+export async function getMonitorIncidents(input: { userId: string; monitorId: string; limit: unknown }) {
+  await assertUserMonitor(input.userId, input.monitorId);
+
+  return listMonitorIncidents(input.userId, input.monitorId, normalizeResultsLimit(input.limit));
 }
 
 export async function updateHttpMonitor(
+  userId: string,
   monitorId: string,
   input: {
     name?: unknown;
@@ -76,6 +91,8 @@ export async function updateHttpMonitor(
     isActive?: unknown;
   },
 ) {
+  await assertUserMonitor(userId, monitorId);
+
   const data: UpdateMonitorData = {};
 
   if (input.name !== undefined) {
@@ -117,7 +134,9 @@ export async function updateHttpMonitor(
   return monitor;
 }
 
-export async function removeHttpMonitor(monitorId: string) {
+export async function removeHttpMonitor(userId: string, monitorId: string) {
+  await assertUserMonitor(userId, monitorId);
+
   await removeMonitorScheduler(monitorId);
   await deleteMonitor(monitorId);
 }

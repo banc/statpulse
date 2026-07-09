@@ -1,4 +1,5 @@
 import express from 'express';
+import { authRouter } from './modules/auth/auth.routes';
 import { monitorRouter } from './modules/monitors/monitor.routes';
 import { errorHandler } from './shared/http/error-handler';
 
@@ -11,6 +12,7 @@ export function createApp() {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  app.use('/auth', authRouter);
   app.use('/monitors', monitorRouter);
   app.use(errorHandler);
 

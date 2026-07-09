@@ -1,21 +1,21 @@
-export declare function listMonitors(): Promise<{
+export declare function listMonitors(userId: string): Promise<{
     latestResult: {
+        statusCode: number | null;
         id: string;
         createdAt: Date;
         monitorId: string;
         responseTimeMs: number;
-        statusCode: number | null;
         isUp: boolean;
         errorMessage: string | null;
     };
     results: undefined;
+    method: import("@statpulse/database").HttpMethod;
+    url: string;
     id: string;
     createdAt: Date;
     name: string | null;
     userId: string;
-    url: string;
     type: import("@statpulse/database").MonitorType;
-    method: import("@statpulse/database").HttpMethod;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
@@ -24,6 +24,7 @@ export declare function listMonitors(): Promise<{
     lastCheckedAt: Date | null;
 }[]>;
 export declare function createHttpMonitor(input: {
+    userId: string;
     name: unknown;
     url: unknown;
     method: unknown;
@@ -31,13 +32,13 @@ export declare function createHttpMonitor(input: {
     intervalSeconds: unknown;
     timeoutMs: unknown;
 }): Promise<{
+    method: import("@statpulse/database").HttpMethod;
+    url: string;
     id: string;
     createdAt: Date;
     name: string | null;
     userId: string;
-    url: string;
     type: import("@statpulse/database").MonitorType;
-    method: import("@statpulse/database").HttpMethod;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
@@ -46,18 +47,20 @@ export declare function createHttpMonitor(input: {
     lastCheckedAt: Date | null;
 }>;
 export declare function getMonitorResults(input: {
+    userId: string;
     monitorId: string;
     limit: unknown;
 }): Promise<{
+    statusCode: number | null;
     id: string;
     createdAt: Date;
     monitorId: string;
     responseTimeMs: number;
-    statusCode: number | null;
     isUp: boolean;
     errorMessage: string | null;
 }[]>;
 export declare function getMonitorIncidents(input: {
+    userId: string;
     monitorId: string;
     limit: unknown;
 }): Promise<{
@@ -69,7 +72,7 @@ export declare function getMonitorIncidents(input: {
     reason: string | null;
     updatedAt: Date;
 }[]>;
-export declare function updateHttpMonitor(monitorId: string, input: {
+export declare function updateHttpMonitor(userId: string, monitorId: string, input: {
     name?: unknown;
     url?: unknown;
     method?: unknown;
@@ -78,13 +81,13 @@ export declare function updateHttpMonitor(monitorId: string, input: {
     timeoutMs?: unknown;
     isActive?: unknown;
 }): Promise<{
+    method: import("@statpulse/database").HttpMethod;
+    url: string;
     id: string;
     createdAt: Date;
     name: string | null;
     userId: string;
-    url: string;
     type: import("@statpulse/database").MonitorType;
-    method: import("@statpulse/database").HttpMethod;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
@@ -92,5 +95,5 @@ export declare function updateHttpMonitor(monitorId: string, input: {
     isActive: boolean;
     lastCheckedAt: Date | null;
 }>;
-export declare function removeHttpMonitor(monitorId: string): Promise<void>;
+export declare function removeHttpMonitor(userId: string, monitorId: string): Promise<void>;
 export declare function syncActiveMonitorSchedulers(): Promise<void>;

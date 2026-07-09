@@ -15,7 +15,7 @@ The project is currently in an early MVP stage. The backend can schedule HTTP ch
 - Docker Compose
 - npm workspaces
 
-TimescaleDB, authentication, alert channels, and the monitoring dashboard are planned but are not implemented yet.
+TimescaleDB, alert channels, and the monitoring dashboard are planned but are not implemented yet.
 
 ## Repository Structure
 
@@ -54,7 +54,7 @@ Install the following tools:
 
 - Node.js 22
 - npm
-- Apple container on macOS, or Docker with Docker Compose as a fallback
+- Docker with Docker Compose
 
 If you use `nvm`, activate the project version:
 
@@ -68,7 +68,8 @@ Verify the installed tools:
 ```bash
 node --version
 npm --version
-container --version
+docker --version
+docker compose version
 ```
 
 ## Local Setup
@@ -83,7 +84,6 @@ Create the local environment file:
 
 ```bash
 cp .env.example .env
-cp .env.container.example .env.container
 ```
 
 The expected local configuration is:
@@ -93,50 +93,28 @@ DATABASE_URL=postgresql://statpulse:statpulse_local_password@localhost:5432/stat
 REDIS_URL=redis://localhost:6379
 PORT=3001
 REQUEST_TIMEOUT_MS=10000
-```
-
-The `.env.container` file is used only by Apple container to initialize the local PostgreSQL container:
-
-```env
-POSTGRES_USER=statpulse
-POSTGRES_PASSWORD=statpulse_local_password
-POSTGRES_DB=statpulse_dev
-PGDATA=/var/lib/postgresql/data/pgdata
+JWT_SECRET=replace-with-a-long-random-local-secret
 ```
 
 The API currently reads `PORT` and defaults to port `3001` when it is not set.
 
-Start PostgreSQL and Redis with Apple container:
-
-```bash
-npm run container:system:start
-npm run container:up
-```
-
-If you previously created the PostgreSQL container with different credentials, or without the `PGDATA` subdirectory, recreate the container and its local volume before switching to the new `.env.container` values.
-
-Check that both containers are running:
-
-```bash
-npm run container:ps
-```
-
-If the containers already exist but are stopped, start them again with:
-
-```bash
-npm run container:start
-```
-
-Docker Compose is still available as a fallback:
+Start PostgreSQL and Redis with Docker Compose:
 
 ```bash
 npm run docker:up
 ```
 
-Check Docker Compose containers:
+If an older local PostgreSQL volume was initialized with different credentials, recreate the local Docker volume before running migrations:
 
 ```bash
-docker compose -f docker-compose.dev.yml ps
+docker compose -f docker-compose.dev.yml down -v
+npm run docker:up
+```
+
+Check local infrastructure containers:
+
+```bash
+npm run docker:ps
 ```
 
 Generate the Prisma client and apply database migrations:
@@ -175,30 +153,57 @@ The applications are available at:
 
 ## Testing the Monitoring MVP Manually
 
+Register a user:
+
+```bash
+curl -X POST http://localhost:3001/auth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"you@example.com","password":"password123"}'
+```
+
+Log in and copy the returned token:
+
+```bash
+curl -X POST http://localhost:3001/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"you@example.com","password":"password123"}'
+```
+
+Check the current user:
+
+```bash
+curl http://localhost:3001/auth/me \
+  -H 'Authorization: Bearer <token>'
+```
+
 Create a monitor:
 
 ```bash
 curl -X POST http://localhost:3001/monitors \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
   -d '{"name":"Example","url":"https://example.com","method":"GET","expectedStatus":200,"intervalSeconds":60,"timeoutMs":10000}'
 ```
 
 List monitors and their latest result:
 
 ```bash
-curl http://localhost:3001/monitors
+curl http://localhost:3001/monitors \
+  -H 'Authorization: Bearer <token>'
 ```
 
 Read recent results for a monitor:
 
 ```bash
-curl 'http://localhost:3001/monitors/<monitor-id>/results?limit=20'
+curl 'http://localhost:3001/monitors/<monitor-id>/results?limit=20' \
+  -H 'Authorization: Bearer <token>'
 ```
 
 Read recent incidents for a monitor:
 
 ```bash
-curl 'http://localhost:3001/monitors/<monitor-id>/incidents?limit=20'
+curl 'http://localhost:3001/monitors/<monitor-id>/incidents?limit=20' \
+  -H 'Authorization: Bearer <token>'
 ```
 
 Pause a monitor:
@@ -206,6 +211,7 @@ Pause a monitor:
 ```bash
 curl -X PATCH http://localhost:3001/monitors/<monitor-id> \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
   -d '{"isActive":false}'
 ```
 
@@ -231,12 +237,6 @@ npm run db:studio
 ```
 
 To stop the local infrastructure:
-
-```bash
-npm run container:down
-```
-
-If you use Docker Compose instead, run:
 
 ```bash
 npm run docker:down

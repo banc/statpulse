@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   postgres-dev:
     image: postgres:15-alpine
     container_name: statpulse-postgres-dev
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: local_password
+      POSTGRES_USER: statpulse
+      POSTGRES_PASSWORD: statpulse_local_password
       POSTGRES_DB: statpulse_dev
     ports:
       - '5432:5432'

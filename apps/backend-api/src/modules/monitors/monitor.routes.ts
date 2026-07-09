@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { asyncHandler } from '../../shared/http/async-handler';
+import { requireAuth } from '../auth/auth.middleware';
 import {
   createMonitorController,
   deleteMonitorController,
@@ -11,6 +12,7 @@ import {
 
 export const monitorRouter = Router();
 
+monitorRouter.use(requireAuth);
 monitorRouter.get('/', asyncHandler(listMonitorsController));
 monitorRouter.post('/', asyncHandler(createMonitorController));
 monitorRouter.get('/:id/results', asyncHandler(listMonitorResultsController));
