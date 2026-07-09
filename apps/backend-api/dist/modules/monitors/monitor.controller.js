@@ -6,13 +6,17 @@ exports.listMonitorResultsController = listMonitorResultsController;
 exports.listMonitorIncidentsController = listMonitorIncidentsController;
 exports.updateMonitorController = updateMonitorController;
 exports.deleteMonitorController = deleteMonitorController;
+const auth_middleware_1 = require("../auth/auth.middleware");
 const monitor_service_1 = require("./monitor.service");
-async function listMonitorsController(_req, res) {
-    const monitors = await (0, monitor_service_1.listMonitors)();
+async function listMonitorsController(req, res) {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
+    const monitors = await (0, monitor_service_1.listMonitors)(auth.userId);
     res.json({ data: monitors });
 }
 async function createMonitorController(req, res) {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
     const monitor = await (0, monitor_service_1.createHttpMonitor)({
+        userId: auth.userId,
         name: req.body.name,
         url: req.body.url,
         method: req.body.method,
@@ -23,21 +27,26 @@ async function createMonitorController(req, res) {
     res.status(201).json({ data: monitor });
 }
 async function listMonitorResultsController(req, res) {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
     const results = await (0, monitor_service_1.getMonitorResults)({
+        userId: auth.userId,
         monitorId: req.params.id,
         limit: req.query.limit,
     });
     res.json({ data: results });
 }
 async function listMonitorIncidentsController(req, res) {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
     const incidents = await (0, monitor_service_1.getMonitorIncidents)({
+        userId: auth.userId,
         monitorId: req.params.id,
         limit: req.query.limit,
     });
     res.json({ data: incidents });
 }
 async function updateMonitorController(req, res) {
-    const monitor = await (0, monitor_service_1.updateHttpMonitor)(req.params.id, {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
+    const monitor = await (0, monitor_service_1.updateHttpMonitor)(auth.userId, req.params.id, {
         name: req.body.name,
         url: req.body.url,
         method: req.body.method,
@@ -49,7 +58,8 @@ async function updateMonitorController(req, res) {
     res.json({ data: monitor });
 }
 async function deleteMonitorController(req, res) {
-    await (0, monitor_service_1.removeHttpMonitor)(req.params.id);
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
+    await (0, monitor_service_1.removeHttpMonitor)(auth.userId, req.params.id);
     res.status(204).send();
 }
 //# sourceMappingURL=monitor.controller.js.map

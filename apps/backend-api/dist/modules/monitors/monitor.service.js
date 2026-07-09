@@ -7,13 +7,12 @@ exports.getMonitorIncidents = getMonitorIncidents;
 exports.updateHttpMonitor = updateHttpMonitor;
 exports.removeHttpMonitor = removeHttpMonitor;
 exports.syncActiveMonitorSchedulers = syncActiveMonitorSchedulers;
-const dev_user_service_1 = require("../dev-users/dev-user.service");
+const app_error_1 = require("../../shared/errors/app-error");
 const monitor_repository_1 = require("./monitor.repository");
 const monitor_validation_1 = require("./monitor.validation");
 const monitor_scheduler_service_1 = require("./monitor-scheduler.service");
-async function listMonitors() {
-    const user = await (0, dev_user_service_1.ensureDevUser)();
-    const monitors = await (0, monitor_repository_1.listUserMonitorsWithLatestResult)(user.id);
+async function listMonitors(userId) {
+    const monitors = await (0, monitor_repository_1.listUserMonitorsWithLatestResult)(userId);
     return monitors.map((monitor) => ({
         ...monitor,
         latestResult: monitor.results[0] ?? null,
@@ -21,9 +20,8 @@ async function listMonitors() {
     }));
 }
 async function createHttpMonitor(input) {
-    const user = await (0, dev_user_service_1.ensureDevUser)();
     const monitor = await (0, monitor_repository_1.createMonitor)({
-        userId: user.id,
+        userId: input.userId,
         name: (0, monitor_validation_1.normalizeName)(input.name),
         url: (0, monitor_validation_1.normalizeUrl)(input.url),
         method: (0, monitor_validation_1.normalizeHttpMethod)(input.method),
@@ -35,13 +33,23 @@ async function createHttpMonitor(input) {
     await (0, monitor_scheduler_service_1.enqueueImmediateMonitorCheck)(monitor);
     return monitor;
 }
+async function assertUserMonitor(userId, monitorId) {
+    const monitor = await (0, monitor_repository_1.findUserMonitorById)(userId, monitorId);
+    if (!monitor) {
+        throw new app_error_1.AppError('Monitor not found', 404);
+    }
+    return monitor;
+}
 async function getMonitorResults(input) {
-    return (0, monitor_repository_1.listMonitorResults)(input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
+    await assertUserMonitor(input.userId, input.monitorId);
+    return (0, monitor_repository_1.listMonitorResults)(input.userId, input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
 }
 async function getMonitorIncidents(input) {
-    return (0, monitor_repository_1.listMonitorIncidents)(input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
+    await assertUserMonitor(input.userId, input.monitorId);
+    return (0, monitor_repository_1.listMonitorIncidents)(input.userId, input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
 }
-async function updateHttpMonitor(monitorId, input) {
+async function updateHttpMonitor(userId, monitorId, input) {
+    await assertUserMonitor(userId, monitorId);
     const data = {};
     if (input.name !== undefined) {
         data.name = (0, monitor_validation_1.normalizeName)(input.name) ?? null;
@@ -71,7 +79,8 @@ async function updateHttpMonitor(monitorId, input) {
     }
     return monitor;
 }
-async function removeHttpMonitor(monitorId) {
+async function removeHttpMonitor(userId, monitorId) {
+    await assertUserMonitor(userId, monitorId);
     await (0, monitor_scheduler_service_1.removeMonitorScheduler)(monitorId);
     await (0, monitor_repository_1.deleteMonitor)(monitorId);
 }

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.listUserMonitorsWithLatestResult = listUserMonitorsWithLatestResult;
 exports.createMonitor = createMonitor;
 exports.updateMonitor = updateMonitor;
+exports.findUserMonitorById = findUserMonitorById;
 exports.deleteMonitor = deleteMonitor;
 exports.listMonitorResults = listMonitorResults;
 exports.listMonitorIncidents = listMonitorIncidents;
@@ -34,21 +35,39 @@ function updateMonitor(id, data) {
         data,
     });
 }
+function findUserMonitorById(userId, monitorId) {
+    return database_1.prisma.monitor.findFirst({
+        where: {
+            id: monitorId,
+            userId,
+        },
+    });
+}
 function deleteMonitor(id) {
     return database_1.prisma.monitor.delete({
         where: { id },
     });
 }
-function listMonitorResults(monitorId, limit) {
+function listMonitorResults(userId, monitorId, limit) {
     return database_1.prisma.monitorResult.findMany({
-        where: { monitorId },
+        where: {
+            monitorId,
+            monitor: {
+                userId,
+            },
+        },
         orderBy: { createdAt: 'desc' },
         take: limit,
     });
 }
-function listMonitorIncidents(monitorId, limit) {
+function listMonitorIncidents(userId, monitorId, limit) {
     return database_1.prisma.incident.findMany({
-        where: { monitorId },
+        where: {
+            monitorId,
+            monitor: {
+                userId,
+            },
+        },
         orderBy: { startedAt: 'desc' },
         take: limit,
     });

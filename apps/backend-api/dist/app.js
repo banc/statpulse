@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createApp = createApp;
 const express_1 = __importDefault(require("express"));
+const auth_routes_1 = require("./modules/auth/auth.routes");
 const monitor_routes_1 = require("./modules/monitors/monitor.routes");
 const error_handler_1 = require("./shared/http/error-handler");
 function createApp() {
@@ -13,6 +14,7 @@ function createApp() {
     app.get('/health', (_req, res) => {
         res.json({ status: 'ok', timestamp: new Date().toISOString() });
     });
+    app.use('/auth', auth_routes_1.authRouter);
     app.use('/monitors', monitor_routes_1.monitorRouter);
     app.use(error_handler_1.errorHandler);
     return app;
