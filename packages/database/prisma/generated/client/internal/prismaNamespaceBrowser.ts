@@ -54,7 +54,9 @@ export const ModelName = {
   User: 'User',
   Monitor: 'Monitor',
   MonitorResult: 'MonitorResult',
-  Incident: 'Incident'
+  Incident: 'Incident',
+  AlertChannel: 'AlertChannel',
+  AlertDeliveryLog: 'AlertDeliveryLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -128,12 +130,50 @@ export const IncidentScalarFieldEnum = {
 export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typeof IncidentScalarFieldEnum]
 
 
+export const AlertChannelScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  name: 'name',
+  config: 'config',
+  isEnabled: 'isEnabled',
+  cooldownSeconds: 'cooldownSeconds',
+  lastSentAt: 'lastSentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlertChannelScalarFieldEnum = (typeof AlertChannelScalarFieldEnum)[keyof typeof AlertChannelScalarFieldEnum]
+
+
+export const AlertDeliveryLogScalarFieldEnum = {
+  id: 'id',
+  alertChannelId: 'alertChannelId',
+  monitorId: 'monitorId',
+  incidentId: 'incidentId',
+  eventType: 'eventType',
+  status: 'status',
+  message: 'message',
+  providerResponse: 'providerResponse',
+  createdAt: 'createdAt'
+} as const
+
+export type AlertDeliveryLogScalarFieldEnum = (typeof AlertDeliveryLogScalarFieldEnum)[keyof typeof AlertDeliveryLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -150,4 +190,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

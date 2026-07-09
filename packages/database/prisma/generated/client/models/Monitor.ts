@@ -291,6 +291,7 @@ export type MonitorWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   results?: Prisma.MonitorResultListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
+  alertDeliveries?: Prisma.AlertDeliveryLogListRelationFilter
 }
 
 export type MonitorOrderByWithRelationInput = {
@@ -310,6 +311,7 @@ export type MonitorOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   results?: Prisma.MonitorResultOrderByRelationAggregateInput
   incidents?: Prisma.IncidentOrderByRelationAggregateInput
+  alertDeliveries?: Prisma.AlertDeliveryLogOrderByRelationAggregateInput
 }
 
 export type MonitorWhereUniqueInput = Prisma.AtLeast<{
@@ -332,6 +334,7 @@ export type MonitorWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   results?: Prisma.MonitorResultListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
+  alertDeliveries?: Prisma.AlertDeliveryLogListRelationFilter
 }, "id">
 
 export type MonitorOrderByWithAggregationInput = {
@@ -390,6 +393,7 @@ export type MonitorCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutMonitorsInput
   results?: Prisma.MonitorResultCreateNestedManyWithoutMonitorInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorUncheckedCreateInput = {
@@ -408,6 +412,7 @@ export type MonitorUncheckedCreateInput = {
   createdAt?: Date | string
   results?: Prisma.MonitorResultUncheckedCreateNestedManyWithoutMonitorInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorUpdateInput = {
@@ -426,6 +431,7 @@ export type MonitorUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutMonitorsNestedInput
   results?: Prisma.MonitorResultUpdateManyWithoutMonitorNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorUncheckedUpdateInput = {
@@ -444,6 +450,7 @@ export type MonitorUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   results?: Prisma.MonitorResultUncheckedUpdateManyWithoutMonitorNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorCreateManyInput = {
@@ -670,6 +677,20 @@ export type MonitorUpdateOneRequiredWithoutIncidentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MonitorUpdateToOneWithWhereWithoutIncidentsInput, Prisma.MonitorUpdateWithoutIncidentsInput>, Prisma.MonitorUncheckedUpdateWithoutIncidentsInput>
 }
 
+export type MonitorCreateNestedOneWithoutAlertDeliveriesInput = {
+  create?: Prisma.XOR<Prisma.MonitorCreateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedCreateWithoutAlertDeliveriesInput>
+  connectOrCreate?: Prisma.MonitorCreateOrConnectWithoutAlertDeliveriesInput
+  connect?: Prisma.MonitorWhereUniqueInput
+}
+
+export type MonitorUpdateOneRequiredWithoutAlertDeliveriesNestedInput = {
+  create?: Prisma.XOR<Prisma.MonitorCreateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedCreateWithoutAlertDeliveriesInput>
+  connectOrCreate?: Prisma.MonitorCreateOrConnectWithoutAlertDeliveriesInput
+  upsert?: Prisma.MonitorUpsertWithoutAlertDeliveriesInput
+  connect?: Prisma.MonitorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MonitorUpdateToOneWithWhereWithoutAlertDeliveriesInput, Prisma.MonitorUpdateWithoutAlertDeliveriesInput>, Prisma.MonitorUncheckedUpdateWithoutAlertDeliveriesInput>
+}
+
 export type MonitorCreateWithoutUserInput = {
   id?: string
   name?: string | null
@@ -685,6 +706,7 @@ export type MonitorCreateWithoutUserInput = {
   createdAt?: Date | string
   results?: Prisma.MonitorResultCreateNestedManyWithoutMonitorInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorUncheckedCreateWithoutUserInput = {
@@ -702,6 +724,7 @@ export type MonitorUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   results?: Prisma.MonitorResultUncheckedCreateNestedManyWithoutMonitorInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorCreateOrConnectWithoutUserInput = {
@@ -764,6 +787,7 @@ export type MonitorCreateWithoutResultsInput = {
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMonitorsInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorUncheckedCreateWithoutResultsInput = {
@@ -781,6 +805,7 @@ export type MonitorUncheckedCreateWithoutResultsInput = {
   lastCheckedAt?: Date | string | null
   createdAt?: Date | string
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorCreateOrConnectWithoutResultsInput = {
@@ -814,6 +839,7 @@ export type MonitorUpdateWithoutResultsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMonitorsNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorUncheckedUpdateWithoutResultsInput = {
@@ -831,6 +857,7 @@ export type MonitorUncheckedUpdateWithoutResultsInput = {
   lastCheckedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorCreateWithoutIncidentsInput = {
@@ -848,6 +875,7 @@ export type MonitorCreateWithoutIncidentsInput = {
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMonitorsInput
   results?: Prisma.MonitorResultCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorUncheckedCreateWithoutIncidentsInput = {
@@ -865,6 +893,7 @@ export type MonitorUncheckedCreateWithoutIncidentsInput = {
   lastCheckedAt?: Date | string | null
   createdAt?: Date | string
   results?: Prisma.MonitorResultUncheckedCreateNestedManyWithoutMonitorInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedCreateNestedManyWithoutMonitorInput
 }
 
 export type MonitorCreateOrConnectWithoutIncidentsInput = {
@@ -898,6 +927,7 @@ export type MonitorUpdateWithoutIncidentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMonitorsNestedInput
   results?: Prisma.MonitorResultUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorUncheckedUpdateWithoutIncidentsInput = {
@@ -915,6 +945,95 @@ export type MonitorUncheckedUpdateWithoutIncidentsInput = {
   lastCheckedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   results?: Prisma.MonitorResultUncheckedUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedUpdateManyWithoutMonitorNestedInput
+}
+
+export type MonitorCreateWithoutAlertDeliveriesInput = {
+  id?: string
+  name?: string | null
+  url: string
+  type?: $Enums.MonitorType
+  method?: $Enums.HttpMethod
+  expectedStatus?: number
+  intervalSeconds?: number
+  timeoutMs?: number
+  status?: $Enums.MonitorStatus
+  isActive?: boolean
+  lastCheckedAt?: Date | string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutMonitorsInput
+  results?: Prisma.MonitorResultCreateNestedManyWithoutMonitorInput
+  incidents?: Prisma.IncidentCreateNestedManyWithoutMonitorInput
+}
+
+export type MonitorUncheckedCreateWithoutAlertDeliveriesInput = {
+  id?: string
+  userId: string
+  name?: string | null
+  url: string
+  type?: $Enums.MonitorType
+  method?: $Enums.HttpMethod
+  expectedStatus?: number
+  intervalSeconds?: number
+  timeoutMs?: number
+  status?: $Enums.MonitorStatus
+  isActive?: boolean
+  lastCheckedAt?: Date | string | null
+  createdAt?: Date | string
+  results?: Prisma.MonitorResultUncheckedCreateNestedManyWithoutMonitorInput
+  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutMonitorInput
+}
+
+export type MonitorCreateOrConnectWithoutAlertDeliveriesInput = {
+  where: Prisma.MonitorWhereUniqueInput
+  create: Prisma.XOR<Prisma.MonitorCreateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedCreateWithoutAlertDeliveriesInput>
+}
+
+export type MonitorUpsertWithoutAlertDeliveriesInput = {
+  update: Prisma.XOR<Prisma.MonitorUpdateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedUpdateWithoutAlertDeliveriesInput>
+  create: Prisma.XOR<Prisma.MonitorCreateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedCreateWithoutAlertDeliveriesInput>
+  where?: Prisma.MonitorWhereInput
+}
+
+export type MonitorUpdateToOneWithWhereWithoutAlertDeliveriesInput = {
+  where?: Prisma.MonitorWhereInput
+  data: Prisma.XOR<Prisma.MonitorUpdateWithoutAlertDeliveriesInput, Prisma.MonitorUncheckedUpdateWithoutAlertDeliveriesInput>
+}
+
+export type MonitorUpdateWithoutAlertDeliveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumMonitorTypeFieldUpdateOperationsInput | $Enums.MonitorType
+  method?: Prisma.EnumHttpMethodFieldUpdateOperationsInput | $Enums.HttpMethod
+  expectedStatus?: Prisma.IntFieldUpdateOperationsInput | number
+  intervalSeconds?: Prisma.IntFieldUpdateOperationsInput | number
+  timeoutMs?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumMonitorStatusFieldUpdateOperationsInput | $Enums.MonitorStatus
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastCheckedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMonitorsNestedInput
+  results?: Prisma.MonitorResultUpdateManyWithoutMonitorNestedInput
+  incidents?: Prisma.IncidentUpdateManyWithoutMonitorNestedInput
+}
+
+export type MonitorUncheckedUpdateWithoutAlertDeliveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumMonitorTypeFieldUpdateOperationsInput | $Enums.MonitorType
+  method?: Prisma.EnumHttpMethodFieldUpdateOperationsInput | $Enums.HttpMethod
+  expectedStatus?: Prisma.IntFieldUpdateOperationsInput | number
+  intervalSeconds?: Prisma.IntFieldUpdateOperationsInput | number
+  timeoutMs?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumMonitorStatusFieldUpdateOperationsInput | $Enums.MonitorStatus
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastCheckedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  results?: Prisma.MonitorResultUncheckedUpdateManyWithoutMonitorNestedInput
+  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorCreateManyUserInput = {
@@ -947,6 +1066,7 @@ export type MonitorUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   results?: Prisma.MonitorResultUpdateManyWithoutMonitorNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorUncheckedUpdateWithoutUserInput = {
@@ -964,6 +1084,7 @@ export type MonitorUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   results?: Prisma.MonitorResultUncheckedUpdateManyWithoutMonitorNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutMonitorNestedInput
+  alertDeliveries?: Prisma.AlertDeliveryLogUncheckedUpdateManyWithoutMonitorNestedInput
 }
 
 export type MonitorUncheckedUpdateManyWithoutUserInput = {
@@ -989,11 +1110,13 @@ export type MonitorUncheckedUpdateManyWithoutUserInput = {
 export type MonitorCountOutputType = {
   results: number
   incidents: number
+  alertDeliveries: number
 }
 
 export type MonitorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   results?: boolean | MonitorCountOutputTypeCountResultsArgs
   incidents?: boolean | MonitorCountOutputTypeCountIncidentsArgs
+  alertDeliveries?: boolean | MonitorCountOutputTypeCountAlertDeliveriesArgs
 }
 
 /**
@@ -1020,6 +1143,13 @@ export type MonitorCountOutputTypeCountIncidentsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.IncidentWhereInput
 }
 
+/**
+ * MonitorCountOutputType without action
+ */
+export type MonitorCountOutputTypeCountAlertDeliveriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AlertDeliveryLogWhereInput
+}
+
 
 export type MonitorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1038,6 +1168,7 @@ export type MonitorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   results?: boolean | Prisma.Monitor$resultsArgs<ExtArgs>
   incidents?: boolean | Prisma.Monitor$incidentsArgs<ExtArgs>
+  alertDeliveries?: boolean | Prisma.Monitor$alertDeliveriesArgs<ExtArgs>
   _count?: boolean | Prisma.MonitorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["monitor"]>
 
@@ -1096,6 +1227,7 @@ export type MonitorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   results?: boolean | Prisma.Monitor$resultsArgs<ExtArgs>
   incidents?: boolean | Prisma.Monitor$incidentsArgs<ExtArgs>
+  alertDeliveries?: boolean | Prisma.Monitor$alertDeliveriesArgs<ExtArgs>
   _count?: boolean | Prisma.MonitorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MonitorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1111,6 +1243,7 @@ export type $MonitorPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     user: Prisma.$UserPayload<ExtArgs>
     results: Prisma.$MonitorResultPayload<ExtArgs>[]
     incidents: Prisma.$IncidentPayload<ExtArgs>[]
+    alertDeliveries: Prisma.$AlertDeliveryLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1523,6 +1656,7 @@ export interface Prisma__MonitorClient<T, Null = never, ExtArgs extends runtime.
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   results<T extends Prisma.Monitor$resultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Monitor$resultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonitorResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   incidents<T extends Prisma.Monitor$incidentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Monitor$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  alertDeliveries<T extends Prisma.Monitor$alertDeliveriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Monitor$alertDeliveriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlertDeliveryLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2011,6 +2145,30 @@ export type Monitor$incidentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.IncidentScalarFieldEnum | Prisma.IncidentScalarFieldEnum[]
+}
+
+/**
+ * Monitor.alertDeliveries
+ */
+export type Monitor$alertDeliveriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlertDeliveryLog
+   */
+  select?: Prisma.AlertDeliveryLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AlertDeliveryLog
+   */
+  omit?: Prisma.AlertDeliveryLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlertDeliveryLogInclude<ExtArgs> | null
+  where?: Prisma.AlertDeliveryLogWhereInput
+  orderBy?: Prisma.AlertDeliveryLogOrderByWithRelationInput | Prisma.AlertDeliveryLogOrderByWithRelationInput[]
+  cursor?: Prisma.AlertDeliveryLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AlertDeliveryLogScalarFieldEnum | Prisma.AlertDeliveryLogScalarFieldEnum[]
 }
 
 /**
