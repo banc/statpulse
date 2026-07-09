@@ -40,6 +40,8 @@ src/
   modules/            business modules grouped by domain
     auth/
       *.routes.ts       registration, login, and current-user routes
+    alert-channels/
+      *.routes.ts       alert channel and delivery log routes
     monitors/
       *.routes.ts       HTTP route definitions
       *.controller.ts   Express request/response mapping
@@ -220,6 +222,31 @@ curl 'http://localhost:3001/monitors/<monitor-id>/metrics?from=2026-07-09T00:00:
   -H 'Authorization: Bearer <token>'
 ```
 
+Create a Telegram alert channel:
+
+```bash
+curl -X POST http://localhost:3001/alert-channels \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -d '{"type":"TELEGRAM","name":"Ops Telegram","config":{"botToken":"<bot-token>","chatId":"<chat-id>"},"cooldownSeconds":300}'
+```
+
+Create an email alert channel for local delivery logs:
+
+```bash
+curl -X POST http://localhost:3001/alert-channels \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>' \
+  -d '{"type":"EMAIL","name":"Ops Email","config":{"email":"ops@example.com"},"cooldownSeconds":300}'
+```
+
+List alert delivery logs:
+
+```bash
+curl 'http://localhost:3001/alert-channels/deliveries?limit=20' \
+  -H 'Authorization: Bearer <token>'
+```
+
 Pause a monitor:
 
 ```bash
@@ -262,9 +289,11 @@ npm run docker:down
 ```text
 Backend API
   -> manages monitors through HTTP endpoints
+  -> manages alert channels through HTTP endpoints
   -> creates one BullMQ repeatable job per active monitor
   -> BullMQ worker performs HTTP requests
   -> worker stores results in PostgreSQL
+  -> worker sends alerts on incident open/resolve
 ```
 
 ## Current Limitations
@@ -273,9 +302,9 @@ Backend API
 - Monitor state and incidents are implemented for UP/DOWN transitions.
 - The frontend is still the default Next.js starter page.
 - Monitor management requires JWT authentication.
-- Alert notifications are not implemented.
+- Telegram alert delivery is implemented. Email channels currently write delivery logs locally and can be wired to SMTP later.
 - Raw monitor results are retained for 90 days.
-- Automated tests are not implemented yet.
+- Automated tests cover URL safety, metrics validation, alert validation, and worker state/alert helpers.
 - URL checks include SSRF protection, but the service still needs more production hardening before public exposure.
 
 ## Development Plan

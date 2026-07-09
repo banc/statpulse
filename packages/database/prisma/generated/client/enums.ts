@@ -31,3 +31,20 @@ export const MonitorStatus = {
 } as const
 
 export type MonitorStatus = (typeof MonitorStatus)[keyof typeof MonitorStatus]
+
+
+export const AlertChannelType = {
+  TELEGRAM: 'TELEGRAM',
+  EMAIL: 'EMAIL'
+} as const
+
+export type AlertChannelType = (typeof AlertChannelType)[keyof typeof AlertChannelType]
+
+
+export const AlertDeliveryStatus = {
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+} as const
+
+export type AlertDeliveryStatus = (typeof AlertDeliveryStatus)[keyof typeof AlertDeliveryStatus]

@@ -1,4 +1,5 @@
 import express from 'express';
+import { alertChannelRouter } from './modules/alert-channels/alert-channel.routes';
 import { authRouter } from './modules/auth/auth.routes';
 import { monitorRouter } from './modules/monitors/monitor.routes';
 import { errorHandler } from './shared/http/error-handler';
@@ -13,6 +14,7 @@ export function createApp() {
   });
 
   app.use('/auth', authRouter);
+  app.use('/alert-channels', alertChannelRouter);
   app.use('/monitors', monitorRouter);
   app.use(errorHandler);
 

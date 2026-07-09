@@ -4,6 +4,7 @@ require("dotenv/config");
 const bullmq_1 = require("bullmq");
 const database_1 = require("@statpulse/database");
 const url_safety_1 = require("@statpulse/url-safety");
+const alert_delivery_1 = require("./alert-delivery");
 const monitor_state_transition_1 = require("./monitor-state-transition");
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
@@ -26,10 +27,16 @@ function getErrorMessage(error) {
 }
 async function saveCheckResult(result) {
     const checkedAt = new Date();
+    const alertEvents = [];
     await database_1.prisma.$transaction(async (tx) => {
         const monitor = await tx.monitor.findUnique({
             where: { id: result.monitorId },
-            select: { status: true },
+            select: {
+                status: true,
+                userId: true,
+                name: true,
+                url: true,
+            },
         });
         if (!monitor) {
             console.warn(`[Monitor ${result.monitorId}] Skipping result: monitor was deleted`);
@@ -62,16 +69,33 @@ async function saveCheckResult(result) {
                 select: { id: true },
             });
             if (!openIncident) {
-                await tx.incident.create({
+                const incident = await tx.incident.create({
                     data: {
                         monitorId: result.monitorId,
                         startedAt: checkedAt,
                         reason: result.errorMessage || `HTTP status ${result.statusCode ?? 'unknown'}`,
                     },
                 });
+                alertEvents.push({
+                    type: 'INCIDENT_OPENED',
+                    userId: monitor.userId,
+                    monitorId: result.monitorId,
+                    monitorName: monitor.name,
+                    monitorUrl: monitor.url,
+                    incidentId: incident.id,
+                    reason: incident.reason,
+                    occurredAt: checkedAt,
+                });
             }
         }
         if (transition.shouldCloseIncidents) {
+            const openIncident = await tx.incident.findFirst({
+                where: {
+                    monitorId: result.monitorId,
+                    resolvedAt: null,
+                },
+                orderBy: { startedAt: 'desc' },
+            });
             await tx.incident.updateMany({
                 where: {
                     monitorId: result.monitorId,
@@ -81,8 +105,21 @@ async function saveCheckResult(result) {
                     resolvedAt: checkedAt,
                 },
             });
+            if (openIncident) {
+                alertEvents.push({
+                    type: 'INCIDENT_RESOLVED',
+                    userId: monitor.userId,
+                    monitorId: result.monitorId,
+                    monitorName: monitor.name,
+                    monitorUrl: monitor.url,
+                    incidentId: openIncident.id,
+                    reason: openIncident.reason,
+                    occurredAt: checkedAt,
+                });
+            }
         }
     });
+    await Promise.all(alertEvents.map(alert_delivery_1.deliverAlertEvent));
 }
 console.log('🚀 StatPulse background worker started...');
 // Initialize BullMQ Worker

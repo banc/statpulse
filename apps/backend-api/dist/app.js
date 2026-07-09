@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createApp = createApp;
 const express_1 = __importDefault(require("express"));
+const alert_channel_routes_1 = require("./modules/alert-channels/alert-channel.routes");
 const auth_routes_1 = require("./modules/auth/auth.routes");
 const monitor_routes_1 = require("./modules/monitors/monitor.routes");
 const error_handler_1 = require("./shared/http/error-handler");
@@ -15,6 +16,7 @@ function createApp() {
         res.json({ status: 'ok', timestamp: new Date().toISOString() });
     });
     app.use('/auth', auth_routes_1.authRouter);
+    app.use('/alert-channels', alert_channel_routes_1.alertChannelRouter);
     app.use('/monitors', monitor_routes_1.monitorRouter);
     app.use(error_handler_1.errorHandler);
     return app;

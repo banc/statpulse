@@ -37,3 +37,13 @@ export type MonitorResult = Prisma.MonitorResultModel
  * 
  */
 export type Incident = Prisma.IncidentModel
+/**
+ * Model AlertChannel
+ * 
+ */
+export type AlertChannel = Prisma.AlertChannelModel
+/**
+ * Model AlertDeliveryLog
+ * 
+ */
+export type AlertDeliveryLog = Prisma.AlertDeliveryLogModel

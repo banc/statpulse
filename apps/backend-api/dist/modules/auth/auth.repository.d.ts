@@ -1,8 +1,8 @@
 export declare function findUserByEmail(email: string): import("@statpulse/database/dist/prisma/generated/client/models").Prisma__UserClient<{
     email: string;
     id: string;
-    passwordHash: string;
     createdAt: Date;
+    passwordHash: string;
 } | null, null, import("@prisma/client/runtime/client").DefaultArgs, {
     omit: import("@statpulse/database/dist/prisma/generated/client/internal/prismaNamespace").GlobalOmitConfig | undefined;
 }>;

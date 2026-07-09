@@ -175,6 +175,7 @@ export type UserWhereInput = {
   passwordHash?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   monitors?: Prisma.MonitorListRelationFilter
+  alertChannels?: Prisma.AlertChannelListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -183,6 +184,7 @@ export type UserOrderByWithRelationInput = {
   passwordHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   monitors?: Prisma.MonitorOrderByRelationAggregateInput
+  alertChannels?: Prisma.AlertChannelOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -194,6 +196,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   monitors?: Prisma.MonitorListRelationFilter
+  alertChannels?: Prisma.AlertChannelListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -222,6 +225,7 @@ export type UserCreateInput = {
   passwordHash: string
   createdAt?: Date | string
   monitors?: Prisma.MonitorCreateNestedManyWithoutUserInput
+  alertChannels?: Prisma.AlertChannelCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -230,6 +234,7 @@ export type UserUncheckedCreateInput = {
   passwordHash: string
   createdAt?: Date | string
   monitors?: Prisma.MonitorUncheckedCreateNestedManyWithoutUserInput
+  alertChannels?: Prisma.AlertChannelUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -238,6 +243,7 @@ export type UserUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   monitors?: Prisma.MonitorUpdateManyWithoutUserNestedInput
+  alertChannels?: Prisma.AlertChannelUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -246,6 +252,7 @@ export type UserUncheckedUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   monitors?: Prisma.MonitorUncheckedUpdateManyWithoutUserNestedInput
+  alertChannels?: Prisma.AlertChannelUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -317,11 +324,26 @@ export type UserUpdateOneRequiredWithoutMonitorsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMonitorsInput, Prisma.UserUpdateWithoutMonitorsInput>, Prisma.UserUncheckedUpdateWithoutMonitorsInput>
 }
 
+export type UserCreateNestedOneWithoutAlertChannelsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlertChannelsInput, Prisma.UserUncheckedCreateWithoutAlertChannelsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlertChannelsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAlertChannelsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAlertChannelsInput, Prisma.UserUncheckedCreateWithoutAlertChannelsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAlertChannelsInput
+  upsert?: Prisma.UserUpsertWithoutAlertChannelsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAlertChannelsInput, Prisma.UserUpdateWithoutAlertChannelsInput>, Prisma.UserUncheckedUpdateWithoutAlertChannelsInput>
+}
+
 export type UserCreateWithoutMonitorsInput = {
   id?: string
   email: string
   passwordHash: string
   createdAt?: Date | string
+  alertChannels?: Prisma.AlertChannelCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMonitorsInput = {
@@ -329,6 +351,7 @@ export type UserUncheckedCreateWithoutMonitorsInput = {
   email: string
   passwordHash: string
   createdAt?: Date | string
+  alertChannels?: Prisma.AlertChannelUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMonitorsInput = {
@@ -352,6 +375,7 @@ export type UserUpdateWithoutMonitorsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alertChannels?: Prisma.AlertChannelUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMonitorsInput = {
@@ -359,6 +383,55 @@ export type UserUncheckedUpdateWithoutMonitorsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  alertChannels?: Prisma.AlertChannelUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAlertChannelsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  createdAt?: Date | string
+  monitors?: Prisma.MonitorCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAlertChannelsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  createdAt?: Date | string
+  monitors?: Prisma.MonitorUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAlertChannelsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlertChannelsInput, Prisma.UserUncheckedCreateWithoutAlertChannelsInput>
+}
+
+export type UserUpsertWithoutAlertChannelsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAlertChannelsInput, Prisma.UserUncheckedUpdateWithoutAlertChannelsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAlertChannelsInput, Prisma.UserUncheckedCreateWithoutAlertChannelsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAlertChannelsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAlertChannelsInput, Prisma.UserUncheckedUpdateWithoutAlertChannelsInput>
+}
+
+export type UserUpdateWithoutAlertChannelsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  monitors?: Prisma.MonitorUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAlertChannelsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  monitors?: Prisma.MonitorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -368,10 +441,12 @@ export type UserUncheckedUpdateWithoutMonitorsInput = {
 
 export type UserCountOutputType = {
   monitors: number
+  alertChannels: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   monitors?: boolean | UserCountOutputTypeCountMonitorsArgs
+  alertChannels?: boolean | UserCountOutputTypeCountAlertChannelsArgs
 }
 
 /**
@@ -391,6 +466,13 @@ export type UserCountOutputTypeCountMonitorsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.MonitorWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAlertChannelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AlertChannelWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -398,6 +480,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   passwordHash?: boolean
   createdAt?: boolean
   monitors?: boolean | Prisma.User$monitorsArgs<ExtArgs>
+  alertChannels?: boolean | Prisma.User$alertChannelsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -425,6 +508,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   monitors?: boolean | Prisma.User$monitorsArgs<ExtArgs>
+  alertChannels?: boolean | Prisma.User$alertChannelsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -434,6 +518,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     monitors: Prisma.$MonitorPayload<ExtArgs>[]
+    alertChannels: Prisma.$AlertChannelPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -835,6 +920,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   monitors<T extends Prisma.User$monitorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$monitorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  alertChannels<T extends Prisma.User$alertChannelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alertChannelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlertChannelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1282,6 +1368,30 @@ export type User$monitorsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.MonitorScalarFieldEnum | Prisma.MonitorScalarFieldEnum[]
+}
+
+/**
+ * User.alertChannels
+ */
+export type User$alertChannelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlertChannel
+   */
+  select?: Prisma.AlertChannelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AlertChannel
+   */
+  omit?: Prisma.AlertChannelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlertChannelInclude<ExtArgs> | null
+  where?: Prisma.AlertChannelWhereInput
+  orderBy?: Prisma.AlertChannelOrderByWithRelationInput | Prisma.AlertChannelOrderByWithRelationInput[]
+  cursor?: Prisma.AlertChannelWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AlertChannelScalarFieldEnum | Prisma.AlertChannelScalarFieldEnum[]
 }
 
 /**

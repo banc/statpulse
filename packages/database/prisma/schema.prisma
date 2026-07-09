@@ -13,6 +13,7 @@ model User {
   email        String    @unique
   passwordHash String
   monitors     Monitor[]
+  alertChannels AlertChannel[]
   createdAt    DateTime  @default(now())
 }
 
@@ -31,6 +32,17 @@ enum MonitorStatus {
   DOWN
 }
 
+enum AlertChannelType {
+  TELEGRAM
+  EMAIL
+}
+
+enum AlertDeliveryStatus {
+  SENT
+  FAILED
+  SKIPPED
+}
+
 model Monitor {
   id              String          @id @default(uuid())
   userId          String
@@ -47,6 +59,7 @@ model Monitor {
   lastCheckedAt   DateTime?
   results         MonitorResult[]
   incidents       Incident[]
+  alertDeliveries AlertDeliveryLog[]
   createdAt       DateTime        @default(now())
 
   @@index([userId, status])
@@ -75,7 +88,45 @@ model Incident {
   reason     String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  alertDeliveries AlertDeliveryLog[]
 
   @@index([monitorId, resolvedAt])
   @@index([monitorId, startedAt(sort: Desc)])
+}
+
+model AlertChannel {
+  id              String             @id @default(uuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            AlertChannelType
+  name            String
+  config          Json
+  isEnabled       Boolean            @default(true)
+  cooldownSeconds Int                @default(300)
+  lastSentAt      DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deliveries      AlertDeliveryLog[]
+
+  @@index([userId, type])
+  @@index([userId, isEnabled])
+}
+
+model AlertDeliveryLog {
+  id             String              @id @default(uuid())
+  alertChannelId String
+  alertChannel   AlertChannel        @relation(fields: [alertChannelId], references: [id], onDelete: Cascade)
+  monitorId      String
+  monitor        Monitor             @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  incidentId     String
+  incident       Incident            @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  eventType      String
+  status         AlertDeliveryStatus
+  message        String?
+  providerResponse String?
+  createdAt      DateTime            @default(now())
+
+  @@index([alertChannelId, createdAt(sort: Desc)])
+  @@index([incidentId, createdAt(sort: Desc)])
+  @@index([monitorId, createdAt(sort: Desc)])
 }

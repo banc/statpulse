@@ -12,14 +12,14 @@ export declare function listMonitors(userId: string): Promise<{
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }[]>;
@@ -35,14 +35,14 @@ export declare function createHttpMonitor(input: {
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }>;
@@ -66,11 +66,11 @@ export declare function getMonitorIncidents(input: {
 }): Promise<{
     id: string;
     createdAt: Date;
+    updatedAt: Date;
     monitorId: string;
     startedAt: Date;
     resolvedAt: Date | null;
     reason: string | null;
-    updatedAt: Date;
 }[]>;
 export declare function getMonitorMetrics(input: {
     userId: string;
@@ -91,14 +91,14 @@ export declare function updateHttpMonitor(userId: string, monitorId: string, inp
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }>;

@@ -31,14 +31,14 @@ export declare function listUserMonitorsWithLatestResult(userId: string): Prisma
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 })[]>;
@@ -46,14 +46,14 @@ export declare function createMonitor(data: CreateMonitorData): Prisma.Prisma__M
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }, never, import("@prisma/client/runtime/client").DefaultArgs, {
@@ -63,14 +63,14 @@ export declare function updateMonitor(id: string, data: UpdateMonitorData): Pris
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }, never, import("@prisma/client/runtime/client").DefaultArgs, {
@@ -80,14 +80,14 @@ export declare function findUserMonitorById(userId: string, monitorId: string): 
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 } | null, null, import("@prisma/client/runtime/client").DefaultArgs, {
@@ -97,14 +97,14 @@ export declare function deleteMonitor(id: string): Prisma.Prisma__MonitorClient<
     method: import("@statpulse/database").HttpMethod;
     url: string;
     id: string;
-    createdAt: Date;
-    name: string | null;
     userId: string;
     type: import("@statpulse/database").MonitorType;
+    name: string | null;
+    createdAt: Date;
+    status: import("@statpulse/database").MonitorStatus;
     expectedStatus: number;
     intervalSeconds: number;
     timeoutMs: number;
-    status: import("@statpulse/database").MonitorStatus;
     isActive: boolean;
     lastCheckedAt: Date | null;
 }, never, import("@prisma/client/runtime/client").DefaultArgs, {
@@ -122,11 +122,11 @@ export declare function listMonitorResults(userId: string, monitorId: string, li
 export declare function listMonitorIncidents(userId: string, monitorId: string, limit: number): Prisma.PrismaPromise<{
     id: string;
     createdAt: Date;
+    updatedAt: Date;
     monitorId: string;
     startedAt: Date;
     resolvedAt: Date | null;
     reason: string | null;
-    updatedAt: Date;
 }[]>;
 export type MonitorMetricsBucket = {
     bucketStart: Date;
