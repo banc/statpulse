@@ -4,6 +4,7 @@ exports.listMonitors = listMonitors;
 exports.createHttpMonitor = createHttpMonitor;
 exports.getMonitorResults = getMonitorResults;
 exports.getMonitorIncidents = getMonitorIncidents;
+exports.getMonitorMetrics = getMonitorMetrics;
 exports.updateHttpMonitor = updateHttpMonitor;
 exports.removeHttpMonitor = removeHttpMonitor;
 exports.syncActiveMonitorSchedulers = syncActiveMonitorSchedulers;
@@ -61,6 +62,19 @@ async function getMonitorResults(input) {
 async function getMonitorIncidents(input) {
     await assertUserMonitor(input.userId, input.monitorId);
     return (0, monitor_repository_1.listMonitorIncidents)(input.userId, input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
+}
+async function getMonitorMetrics(input) {
+    await assertUserMonitor(input.userId, input.monitorId);
+    const metricsQuery = (0, monitor_validation_1.normalizeMetricsQuery)({
+        from: input.from,
+        to: input.to,
+        bucketSeconds: input.bucketSeconds,
+    });
+    return (0, monitor_repository_1.listMonitorMetricsBuckets)({
+        userId: input.userId,
+        monitorId: input.monitorId,
+        ...metricsQuery,
+    });
 }
 async function updateHttpMonitor(userId, monitorId, input) {
     await assertUserMonitor(userId, monitorId);

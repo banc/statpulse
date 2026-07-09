@@ -11,6 +11,7 @@ exports.monitorRouter.get('/', (0, async_handler_1.asyncHandler)(monitor_control
 exports.monitorRouter.post('/', (0, async_handler_1.asyncHandler)(monitor_controller_1.createMonitorController));
 exports.monitorRouter.get('/:id/results', (0, async_handler_1.asyncHandler)(monitor_controller_1.listMonitorResultsController));
 exports.monitorRouter.get('/:id/incidents', (0, async_handler_1.asyncHandler)(monitor_controller_1.listMonitorIncidentsController));
+exports.monitorRouter.get('/:id/metrics', (0, async_handler_1.asyncHandler)(monitor_controller_1.listMonitorMetricsController));
 exports.monitorRouter.patch('/:id', (0, async_handler_1.asyncHandler)(monitor_controller_1.updateMonitorController));
 exports.monitorRouter.delete('/:id', (0, async_handler_1.asyncHandler)(monitor_controller_1.deleteMonitorController));
 //# sourceMappingURL=monitor.routes.js.map

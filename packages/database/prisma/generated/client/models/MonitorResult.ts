@@ -251,10 +251,11 @@ export type MonitorResultOrderByWithRelationInput = {
 }
 
 export type MonitorResultWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id_createdAt?: Prisma.MonitorResultIdCreatedAtCompoundUniqueInput
   AND?: Prisma.MonitorResultWhereInput | Prisma.MonitorResultWhereInput[]
   OR?: Prisma.MonitorResultWhereInput[]
   NOT?: Prisma.MonitorResultWhereInput | Prisma.MonitorResultWhereInput[]
+  id?: Prisma.StringFilter<"MonitorResult"> | string
   monitorId?: Prisma.StringFilter<"MonitorResult"> | string
   responseTimeMs?: Prisma.IntFilter<"MonitorResult"> | number
   statusCode?: Prisma.IntNullableFilter<"MonitorResult"> | number | null
@@ -262,7 +263,7 @@ export type MonitorResultWhereUniqueInput = Prisma.AtLeast<{
   errorMessage?: Prisma.StringNullableFilter<"MonitorResult"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MonitorResult"> | Date | string
   monitor?: Prisma.XOR<Prisma.MonitorScalarRelationFilter, Prisma.MonitorWhereInput>
-}, "id">
+}, "id_createdAt">
 
 export type MonitorResultOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -369,6 +370,11 @@ export type MonitorResultListRelationFilter = {
 
 export type MonitorResultOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type MonitorResultIdCreatedAtCompoundUniqueInput = {
+  id: string
+  createdAt: Date | string
 }
 
 export type MonitorResultCountOrderByAggregateInput = {

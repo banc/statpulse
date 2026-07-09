@@ -5,3 +5,12 @@ export declare function normalizeHttpMethod(value: unknown): "GET" | "HEAD";
 export declare function normalizeExpectedStatus(value: unknown): number;
 export declare function normalizeTimeoutMs(value: unknown): number;
 export declare function normalizeResultsLimit(value: unknown): number;
+export declare function normalizeMetricsQuery(input: {
+    from: unknown;
+    to: unknown;
+    bucketSeconds: unknown;
+}): {
+    from: Date;
+    to: Date;
+    bucketSeconds: number;
+};

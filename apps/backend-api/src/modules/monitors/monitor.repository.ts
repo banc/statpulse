@@ -1,4 +1,4 @@
-import { prisma } from '@statpulse/database';
+import { Prisma, prisma } from '@statpulse/database';
 
 export type CreateMonitorData = {
   userId: string;
@@ -88,6 +88,52 @@ export function listMonitorIncidents(userId: string, monitorId: string, limit: n
     orderBy: { startedAt: 'desc' },
     take: limit,
   });
+}
+
+export type MonitorMetricsBucket = {
+  bucketStart: Date;
+  checkCount: number;
+  avgResponseTimeMs: number | null;
+  minResponseTimeMs: number | null;
+  maxResponseTimeMs: number | null;
+  availability: number | null;
+};
+
+export function listMonitorMetricsBuckets(input: {
+  userId: string;
+  monitorId: string;
+  from: Date;
+  to: Date;
+  bucketSeconds: number;
+}) {
+  return prisma.$queryRaw<MonitorMetricsBucket[]>`
+    SELECT
+      time_bucket(make_interval(secs => ${input.bucketSeconds}), r."createdAt") AS "bucketStart",
+      COUNT(*)::INTEGER AS "checkCount",
+      AVG(r."responseTimeMs")::DOUBLE PRECISION AS "avgResponseTimeMs",
+      MIN(r."responseTimeMs")::INTEGER AS "minResponseTimeMs",
+      MAX(r."responseTimeMs")::INTEGER AS "maxResponseTimeMs",
+      AVG(CASE WHEN r."isUp" THEN 1.0 ELSE 0.0 END)::DOUBLE PRECISION AS "availability"
+    FROM "MonitorResult" r
+    INNER JOIN "Monitor" m ON m."id" = r."monitorId"
+    WHERE
+      r."monitorId" = ${input.monitorId}
+      AND m."userId" = ${input.userId}
+      AND r."createdAt" >= ${input.from}
+      AND r."createdAt" < ${input.to}
+    GROUP BY "bucketStart"
+    ORDER BY "bucketStart" ASC
+  `;
+}
+
+export function buildContinuousMetricsRefreshQuery(from: Date, to: Date) {
+  return Prisma.sql`
+    CALL refresh_continuous_aggregate(
+      '"MonitorResultFiveMinuteMetrics"',
+      ${from},
+      ${to}
+    )
+  `;
 }
 
 export function listActiveMonitorSchedulerData() {

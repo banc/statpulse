@@ -53,7 +53,7 @@ model Monitor {
 }
 
 model MonitorResult {
-  id             String   @id @default(uuid())
+  id             String   @default(uuid())
   monitorId      String
   monitor        Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
   responseTimeMs Int
@@ -62,6 +62,7 @@ model MonitorResult {
   errorMessage   String?
   createdAt      DateTime @default(now())
 
+  @@id([id, createdAt])
   @@index([monitorId, createdAt(sort: Desc)])
 }
 

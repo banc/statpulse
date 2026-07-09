@@ -7,6 +7,8 @@ exports.findUserMonitorById = findUserMonitorById;
 exports.deleteMonitor = deleteMonitor;
 exports.listMonitorResults = listMonitorResults;
 exports.listMonitorIncidents = listMonitorIncidents;
+exports.listMonitorMetricsBuckets = listMonitorMetricsBuckets;
+exports.buildContinuousMetricsRefreshQuery = buildContinuousMetricsRefreshQuery;
 exports.listActiveMonitorSchedulerData = listActiveMonitorSchedulerData;
 const database_1 = require("@statpulse/database");
 function listUserMonitorsWithLatestResult(userId) {
@@ -71,6 +73,35 @@ function listMonitorIncidents(userId, monitorId, limit) {
         orderBy: { startedAt: 'desc' },
         take: limit,
     });
+}
+function listMonitorMetricsBuckets(input) {
+    return database_1.prisma.$queryRaw `
+    SELECT
+      time_bucket(make_interval(secs => ${input.bucketSeconds}), r."createdAt") AS "bucketStart",
+      COUNT(*)::INTEGER AS "checkCount",
+      AVG(r."responseTimeMs")::DOUBLE PRECISION AS "avgResponseTimeMs",
+      MIN(r."responseTimeMs")::INTEGER AS "minResponseTimeMs",
+      MAX(r."responseTimeMs")::INTEGER AS "maxResponseTimeMs",
+      AVG(CASE WHEN r."isUp" THEN 1.0 ELSE 0.0 END)::DOUBLE PRECISION AS "availability"
+    FROM "MonitorResult" r
+    INNER JOIN "Monitor" m ON m."id" = r."monitorId"
+    WHERE
+      r."monitorId" = ${input.monitorId}
+      AND m."userId" = ${input.userId}
+      AND r."createdAt" >= ${input.from}
+      AND r."createdAt" < ${input.to}
+    GROUP BY "bucketStart"
+    ORDER BY "bucketStart" ASC
+  `;
+}
+function buildContinuousMetricsRefreshQuery(from, to) {
+    return database_1.Prisma.sql `
+    CALL refresh_continuous_aggregate(
+      '"MonitorResultFiveMinuteMetrics"',
+      ${from},
+      ${to}
+    )
+  `;
 }
 function listActiveMonitorSchedulerData() {
     return database_1.prisma.monitor.findMany({
