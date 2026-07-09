@@ -12,6 +12,9 @@ async function enqueueImmediateMonitorCheck(monitor) {
     await monitor_queue_1.monitorQueue.add('ping-job', {
         monitorId: monitor.id,
         url: monitor.url,
+        method: monitor.method,
+        expectedStatus: monitor.expectedStatus,
+        timeoutMs: monitor.timeoutMs,
     }, {
         jobId: `manual-${monitor.id}-${Date.now()}`,
         removeOnComplete: 100,
@@ -29,6 +32,9 @@ async function scheduleMonitor(monitor) {
         data: {
             monitorId: monitor.id,
             url: monitor.url,
+            method: monitor.method,
+            expectedStatus: monitor.expectedStatus,
+            timeoutMs: monitor.timeoutMs,
         },
         opts: {
             removeOnComplete: 100,

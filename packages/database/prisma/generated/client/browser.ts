@@ -32,3 +32,8 @@ export type Monitor = Prisma.MonitorModel
  * 
  */
 export type MonitorResult = Prisma.MonitorResultModel
+/**
+ * Model Incident
+ * 
+ */
+export type Incident = Prisma.IncidentModel

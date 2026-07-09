@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Monitor: 'Monitor',
-  MonitorResult: 'MonitorResult'
+  MonitorResult: 'MonitorResult',
+  Incident: 'Incident'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -85,9 +86,16 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const MonitorScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  name: 'name',
   url: 'url',
+  type: 'type',
+  method: 'method',
+  expectedStatus: 'expectedStatus',
   intervalSeconds: 'intervalSeconds',
+  timeoutMs: 'timeoutMs',
+  status: 'status',
   isActive: 'isActive',
+  lastCheckedAt: 'lastCheckedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -105,6 +113,19 @@ export const MonitorResultScalarFieldEnum = {
 } as const
 
 export type MonitorResultScalarFieldEnum = (typeof MonitorResultScalarFieldEnum)[keyof typeof MonitorResultScalarFieldEnum]
+
+
+export const IncidentScalarFieldEnum = {
+  id: 'id',
+  monitorId: 'monitorId',
+  startedAt: 'startedAt',
+  resolvedAt: 'resolvedAt',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IncidentScalarFieldEnum = (typeof IncidentScalarFieldEnum)[keyof typeof IncidentScalarFieldEnum]
 
 
 export const SortOrder = {
