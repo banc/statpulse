@@ -7,6 +7,7 @@ exports.normalizeHttpMethod = normalizeHttpMethod;
 exports.normalizeExpectedStatus = normalizeExpectedStatus;
 exports.normalizeTimeoutMs = normalizeTimeoutMs;
 exports.normalizeResultsLimit = normalizeResultsLimit;
+const url_safety_1 = require("@statpulse/url-safety");
 const app_error_1 = require("../../shared/errors/app-error");
 const MIN_INTERVAL_SECONDS = 30;
 const DEFAULT_INTERVAL_SECONDS = 60;
@@ -18,17 +19,15 @@ function normalizeUrl(value) {
     if (typeof value !== 'string' || value.trim().length === 0) {
         throw new app_error_1.AppError('URL is required');
     }
-    let url;
     try {
-        url = new URL(value.trim());
+        return (0, url_safety_1.normalizeHttpUrl)(value);
     }
-    catch {
-        throw new app_error_1.AppError('URL must be valid');
+    catch (error) {
+        if (error instanceof url_safety_1.UnsafeUrlError) {
+            throw new app_error_1.AppError(error.message);
+        }
+        throw error;
     }
-    if (!['http:', 'https:'].includes(url.protocol)) {
-        throw new app_error_1.AppError('Only HTTP and HTTPS URLs are supported for MVP');
-    }
-    return url.toString();
 }
 function normalizeIntervalSeconds(value) {
     if (value === undefined) {

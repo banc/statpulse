@@ -1,7 +1,9 @@
 import 'dotenv/config';
 
 import { Worker, Job } from 'bullmq';
-import { MonitorStatus, prisma } from '@statpulse/database';
+import { prisma } from '@statpulse/database';
+import { safeFetch } from '@statpulse/url-safety';
+import { getMonitorStateTransition } from './monitor-state-transition';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
@@ -48,7 +50,6 @@ type CheckResult = {
 
 async function saveCheckResult(result: CheckResult) {
   const checkedAt = new Date();
-  const nextStatus = result.isUp ? MonitorStatus.UP : MonitorStatus.DOWN;
 
   await prisma.$transaction(async (tx) => {
     const monitor = await tx.monitor.findUnique({
@@ -60,6 +61,8 @@ async function saveCheckResult(result: CheckResult) {
       console.warn(`[Monitor ${result.monitorId}] Skipping result: monitor was deleted`);
       return;
     }
+
+    const transition = getMonitorStateTransition(monitor.status, result.isUp);
 
     await tx.monitorResult.create({
       data: {
@@ -75,12 +78,12 @@ async function saveCheckResult(result: CheckResult) {
     await tx.monitor.update({
       where: { id: result.monitorId },
       data: {
-        status: nextStatus,
+        status: transition.nextStatus,
         lastCheckedAt: checkedAt,
       },
     });
 
-    if (nextStatus === MonitorStatus.DOWN && monitor.status !== MonitorStatus.DOWN) {
+    if (transition.shouldOpenIncident) {
       const openIncident = await tx.incident.findFirst({
         where: {
           monitorId: result.monitorId,
@@ -100,7 +103,7 @@ async function saveCheckResult(result: CheckResult) {
       }
     }
 
-    if (nextStatus === MonitorStatus.UP && monitor.status === MonitorStatus.DOWN) {
+    if (transition.shouldCloseIncidents) {
       await tx.incident.updateMany({
         where: {
           monitorId: result.monitorId,
@@ -135,8 +138,9 @@ const worker = new Worker(
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       try {
-        const response = await fetch(url, {
+        const response = await safeFetch(url, {
           method,
+          timeoutMs,
           signal: controller.signal,
           headers: { 'User-Agent': 'StatPulseMonitor/1.0' },
         });

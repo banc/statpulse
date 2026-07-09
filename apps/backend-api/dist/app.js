@@ -10,7 +10,7 @@ const monitor_routes_1 = require("./modules/monitors/monitor.routes");
 const error_handler_1 = require("./shared/http/error-handler");
 function createApp() {
     const app = (0, express_1.default)();
-    app.use(express_1.default.json());
+    app.use(express_1.default.json({ limit: '32kb' }));
     app.get('/health', (_req, res) => {
         res.json({ status: 'ok', timestamp: new Date().toISOString() });
     });

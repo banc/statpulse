@@ -1,3 +1,4 @@
+import { assertSafeHttpUrl, UnsafeUrlError } from '@statpulse/url-safety';
 import { AppError } from '../../shared/errors/app-error';
 import {
   createMonitor,
@@ -40,10 +41,11 @@ export async function createHttpMonitor(input: {
   intervalSeconds: unknown;
   timeoutMs: unknown;
 }) {
+  const url = await normalizeAndAssertSafeUrl(input.url);
   const monitor = await createMonitor({
     userId: input.userId,
     name: normalizeName(input.name),
-    url: normalizeUrl(input.url),
+    url,
     method: normalizeHttpMethod(input.method),
     expectedStatus: normalizeExpectedStatus(input.expectedStatus),
     intervalSeconds: normalizeIntervalSeconds(input.intervalSeconds),
@@ -64,6 +66,20 @@ async function assertUserMonitor(userId: string, monitorId: string) {
   }
 
   return monitor;
+}
+
+async function normalizeAndAssertSafeUrl(value: unknown) {
+  const url = normalizeUrl(value);
+
+  try {
+    return await assertSafeHttpUrl(url);
+  } catch (error) {
+    if (error instanceof UnsafeUrlError) {
+      throw new AppError(error.message);
+    }
+
+    throw error;
+  }
 }
 
 export async function getMonitorResults(input: { userId: string; monitorId: string; limit: unknown }) {
@@ -100,7 +116,7 @@ export async function updateHttpMonitor(
   }
 
   if (input.url !== undefined) {
-    data.url = normalizeUrl(input.url);
+    data.url = await normalizeAndAssertSafeUrl(input.url);
   }
 
   if (input.method !== undefined) {
