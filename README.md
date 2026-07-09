@@ -26,6 +26,7 @@ apps/
   worker/        BullMQ worker that performs HTTP checks
 packages/
   database/      Prisma schema, migrations, and shared database client
+  url-safety/    URL normalization and SSRF protection helpers
 ```
 
 ## Backend API Architecture
@@ -37,6 +38,8 @@ src/
   config/             environment configuration
   infrastructure/     external adapters such as BullMQ queues
   modules/            business modules grouped by domain
+    auth/
+      *.routes.ts       registration, login, and current-user routes
     monitors/
       *.routes.ts       HTTP route definitions
       *.controller.ts   Express request/response mapping
@@ -97,6 +100,8 @@ JWT_SECRET=replace-with-a-long-random-local-secret
 ```
 
 The API currently reads `PORT` and defaults to port `3001` when it is not set.
+
+Monitor URLs are normalized and checked before being stored. Private, local, link-local, multicast, and reserved network targets are blocked by default. The worker repeats this safety check before each HTTP request and before following redirects.
 
 Start PostgreSQL and Redis with Docker Compose:
 
@@ -220,6 +225,7 @@ curl -X PATCH http://localhost:3001/monitors/<monitor-id> \
 ```bash
 npm run lint
 npm run typecheck
+npm test
 npm run format:check
 npm run build
 ```
@@ -257,11 +263,11 @@ Backend API
 - Only basic HTTP monitoring is implemented.
 - Monitor state and incidents are implemented for UP/DOWN transitions.
 - The frontend is still the default Next.js starter page.
-- Monitor management currently uses a development-only user instead of authentication.
+- Monitor management requires JWT authentication.
 - Alert notifications are not implemented.
 - PostgreSQL is used without TimescaleDB.
 - Automated tests are not implemented yet.
-- SSRF protection is not implemented yet, so do not expose the API publicly.
+- URL checks include SSRF protection, but the service still needs more production hardening before public exposure.
 
 ## Development Plan
 

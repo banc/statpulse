@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const bullmq_1 = require("bullmq");
 const database_1 = require("@statpulse/database");
+const url_safety_1 = require("@statpulse/url-safety");
+const monitor_state_transition_1 = require("./monitor-state-transition");
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
 function isMonitorJobData(data) {
@@ -24,7 +26,6 @@ function getErrorMessage(error) {
 }
 async function saveCheckResult(result) {
     const checkedAt = new Date();
-    const nextStatus = result.isUp ? database_1.MonitorStatus.UP : database_1.MonitorStatus.DOWN;
     await database_1.prisma.$transaction(async (tx) => {
         const monitor = await tx.monitor.findUnique({
             where: { id: result.monitorId },
@@ -34,6 +35,7 @@ async function saveCheckResult(result) {
             console.warn(`[Monitor ${result.monitorId}] Skipping result: monitor was deleted`);
             return;
         }
+        const transition = (0, monitor_state_transition_1.getMonitorStateTransition)(monitor.status, result.isUp);
         await tx.monitorResult.create({
             data: {
                 monitorId: result.monitorId,
@@ -47,11 +49,11 @@ async function saveCheckResult(result) {
         await tx.monitor.update({
             where: { id: result.monitorId },
             data: {
-                status: nextStatus,
+                status: transition.nextStatus,
                 lastCheckedAt: checkedAt,
             },
         });
-        if (nextStatus === database_1.MonitorStatus.DOWN && monitor.status !== database_1.MonitorStatus.DOWN) {
+        if (transition.shouldOpenIncident) {
             const openIncident = await tx.incident.findFirst({
                 where: {
                     monitorId: result.monitorId,
@@ -69,7 +71,7 @@ async function saveCheckResult(result) {
                 });
             }
         }
-        if (nextStatus === database_1.MonitorStatus.UP && monitor.status === database_1.MonitorStatus.DOWN) {
+        if (transition.shouldCloseIncidents) {
             await tx.incident.updateMany({
                 where: {
                     monitorId: result.monitorId,
@@ -95,8 +97,9 @@ const worker = new bullmq_1.Worker('monitor-tasks', async (job) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
         try {
-            const response = await fetch(url, {
+            const response = await (0, url_safety_1.safeFetch)(url, {
                 method,
+                timeoutMs,
                 signal: controller.signal,
                 headers: { 'User-Agent': 'StatPulseMonitor/1.0' },
             });

@@ -5,13 +5,15 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"No tests configured yet\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint"
   },
   "dependencies": {
     "@statpulse/database": "1.0.0",
+    "@statpulse/url-safety": "1.0.0",
     "bullmq": "^5.7.0",
     "undici": "^6.10.0",
     "dotenv": "^16.4.0"

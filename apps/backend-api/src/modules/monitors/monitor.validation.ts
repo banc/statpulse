@@ -1,3 +1,4 @@
+import { normalizeHttpUrl, UnsafeUrlError } from '@statpulse/url-safety';
 import { AppError } from '../../shared/errors/app-error';
 
 const MIN_INTERVAL_SECONDS = 30;
@@ -12,19 +13,15 @@ export function normalizeUrl(value: unknown) {
     throw new AppError('URL is required');
   }
 
-  let url: URL;
-
   try {
-    url = new URL(value.trim());
-  } catch {
-    throw new AppError('URL must be valid');
-  }
+    return normalizeHttpUrl(value);
+  } catch (error) {
+    if (error instanceof UnsafeUrlError) {
+      throw new AppError(error.message);
+    }
 
-  if (!['http:', 'https:'].includes(url.protocol)) {
-    throw new AppError('Only HTTP and HTTPS URLs are supported for MVP');
+    throw error;
   }
-
-  return url.toString();
 }
 
 export function normalizeIntervalSeconds(value: unknown) {

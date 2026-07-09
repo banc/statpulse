@@ -7,6 +7,7 @@ exports.getMonitorIncidents = getMonitorIncidents;
 exports.updateHttpMonitor = updateHttpMonitor;
 exports.removeHttpMonitor = removeHttpMonitor;
 exports.syncActiveMonitorSchedulers = syncActiveMonitorSchedulers;
+const url_safety_1 = require("@statpulse/url-safety");
 const app_error_1 = require("../../shared/errors/app-error");
 const monitor_repository_1 = require("./monitor.repository");
 const monitor_validation_1 = require("./monitor.validation");
@@ -20,10 +21,11 @@ async function listMonitors(userId) {
     }));
 }
 async function createHttpMonitor(input) {
+    const url = await normalizeAndAssertSafeUrl(input.url);
     const monitor = await (0, monitor_repository_1.createMonitor)({
         userId: input.userId,
         name: (0, monitor_validation_1.normalizeName)(input.name),
-        url: (0, monitor_validation_1.normalizeUrl)(input.url),
+        url,
         method: (0, monitor_validation_1.normalizeHttpMethod)(input.method),
         expectedStatus: (0, monitor_validation_1.normalizeExpectedStatus)(input.expectedStatus),
         intervalSeconds: (0, monitor_validation_1.normalizeIntervalSeconds)(input.intervalSeconds),
@@ -40,6 +42,18 @@ async function assertUserMonitor(userId, monitorId) {
     }
     return monitor;
 }
+async function normalizeAndAssertSafeUrl(value) {
+    const url = (0, monitor_validation_1.normalizeUrl)(value);
+    try {
+        return await (0, url_safety_1.assertSafeHttpUrl)(url);
+    }
+    catch (error) {
+        if (error instanceof url_safety_1.UnsafeUrlError) {
+            throw new app_error_1.AppError(error.message);
+        }
+        throw error;
+    }
+}
 async function getMonitorResults(input) {
     await assertUserMonitor(input.userId, input.monitorId);
     return (0, monitor_repository_1.listMonitorResults)(input.userId, input.monitorId, (0, monitor_validation_1.normalizeResultsLimit)(input.limit));
@@ -55,7 +69,7 @@ async function updateHttpMonitor(userId, monitorId, input) {
         data.name = (0, monitor_validation_1.normalizeName)(input.name) ?? null;
     }
     if (input.url !== undefined) {
-        data.url = (0, monitor_validation_1.normalizeUrl)(input.url);
+        data.url = await normalizeAndAssertSafeUrl(input.url);
     }
     if (input.method !== undefined) {
         data.method = (0, monitor_validation_1.normalizeHttpMethod)(input.method);
