@@ -4,6 +4,7 @@ exports.listMonitorsController = listMonitorsController;
 exports.createMonitorController = createMonitorController;
 exports.listMonitorResultsController = listMonitorResultsController;
 exports.listMonitorIncidentsController = listMonitorIncidentsController;
+exports.listMonitorMetricsController = listMonitorMetricsController;
 exports.updateMonitorController = updateMonitorController;
 exports.deleteMonitorController = deleteMonitorController;
 const auth_middleware_1 = require("../auth/auth.middleware");
@@ -43,6 +44,17 @@ async function listMonitorIncidentsController(req, res) {
         limit: req.query.limit,
     });
     res.json({ data: incidents });
+}
+async function listMonitorMetricsController(req, res) {
+    const auth = (0, auth_middleware_1.getAuthContext)(req);
+    const metrics = await (0, monitor_service_1.getMonitorMetrics)({
+        userId: auth.userId,
+        monitorId: req.params.id,
+        from: req.query.from,
+        to: req.query.to,
+        bucketSeconds: req.query.bucketSeconds,
+    });
+    res.json({ data: metrics });
 }
 async function updateMonitorController(req, res) {
     const auth = (0, auth_middleware_1.getAuthContext)(req);

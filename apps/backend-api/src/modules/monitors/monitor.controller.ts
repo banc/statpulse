@@ -3,6 +3,7 @@ import { getAuthContext } from '../auth/auth.middleware';
 import {
   createHttpMonitor,
   getMonitorIncidents,
+  getMonitorMetrics,
   getMonitorResults,
   listMonitors,
   removeHttpMonitor,
@@ -50,6 +51,19 @@ export async function listMonitorIncidentsController(req: Request, res: Response
   });
 
   res.json({ data: incidents });
+}
+
+export async function listMonitorMetricsController(req: Request, res: Response) {
+  const auth = getAuthContext(req);
+  const metrics = await getMonitorMetrics({
+    userId: auth.userId,
+    monitorId: req.params.id,
+    from: req.query.from,
+    to: req.query.to,
+    bucketSeconds: req.query.bucketSeconds,
+  });
+
+  res.json({ data: metrics });
 }
 
 export async function updateMonitorController(req: Request, res: Response) {

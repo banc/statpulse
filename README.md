@@ -9,7 +9,7 @@ The project is currently in an early MVP stage. The backend can schedule HTTP ch
 - Node.js and TypeScript
 - Next.js and React
 - Express
-- PostgreSQL
+- TimescaleDB/PostgreSQL
 - Prisma
 - Redis and BullMQ
 - Docker Compose
@@ -102,6 +102,8 @@ JWT_SECRET=replace-with-a-long-random-local-secret
 The API currently reads `PORT` and defaults to port `3001` when it is not set.
 
 Monitor URLs are normalized and checked before being stored. Private, local, link-local, multicast, and reserved network targets are blocked by default. The worker repeats this safety check before each HTTP request and before following redirects.
+
+Monitor results are stored in TimescaleDB as time-series data. The local Docker Compose setup uses a TimescaleDB PostgreSQL image, and migrations enable a hypertable, a 90-day raw result retention policy, and a five-minute continuous aggregate for dashboard metrics.
 
 Start PostgreSQL and Redis with Docker Compose:
 
@@ -211,6 +213,13 @@ curl 'http://localhost:3001/monitors/<monitor-id>/incidents?limit=20' \
   -H 'Authorization: Bearer <token>'
 ```
 
+Read graph-ready metrics buckets for a monitor:
+
+```bash
+curl 'http://localhost:3001/monitors/<monitor-id>/metrics?from=2026-07-09T00:00:00.000Z&to=2026-07-10T00:00:00.000Z&bucketSeconds=300' \
+  -H 'Authorization: Bearer <token>'
+```
+
 Pause a monitor:
 
 ```bash
@@ -265,7 +274,7 @@ Backend API
 - The frontend is still the default Next.js starter page.
 - Monitor management requires JWT authentication.
 - Alert notifications are not implemented.
-- PostgreSQL is used without TimescaleDB.
+- Raw monitor results are retained for 90 days.
 - Automated tests are not implemented yet.
 - URL checks include SSRF protection, but the service still needs more production hardening before public exposure.
 

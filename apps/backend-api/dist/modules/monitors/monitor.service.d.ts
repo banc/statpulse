@@ -72,6 +72,13 @@ export declare function getMonitorIncidents(input: {
     reason: string | null;
     updatedAt: Date;
 }[]>;
+export declare function getMonitorMetrics(input: {
+    userId: string;
+    monitorId: string;
+    from: unknown;
+    to: unknown;
+    bucketSeconds: unknown;
+}): Promise<import("./monitor.repository").MonitorMetricsBucket[]>;
 export declare function updateHttpMonitor(userId: string, monitorId: string, input: {
     name?: unknown;
     url?: unknown;

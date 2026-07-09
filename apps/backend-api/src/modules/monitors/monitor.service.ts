@@ -6,6 +6,7 @@ import {
   findUserMonitorById,
   listActiveMonitorSchedulerData,
   listMonitorIncidents,
+  listMonitorMetricsBuckets,
   listMonitorResults,
   listUserMonitorsWithLatestResult,
   updateMonitor,
@@ -16,6 +17,7 @@ import {
   normalizeHttpMethod,
   normalizeIntervalSeconds,
   normalizeName,
+  normalizeMetricsQuery,
   normalizeResultsLimit,
   normalizeTimeoutMs,
   normalizeUrl,
@@ -92,6 +94,28 @@ export async function getMonitorIncidents(input: { userId: string; monitorId: st
   await assertUserMonitor(input.userId, input.monitorId);
 
   return listMonitorIncidents(input.userId, input.monitorId, normalizeResultsLimit(input.limit));
+}
+
+export async function getMonitorMetrics(input: {
+  userId: string;
+  monitorId: string;
+  from: unknown;
+  to: unknown;
+  bucketSeconds: unknown;
+}) {
+  await assertUserMonitor(input.userId, input.monitorId);
+
+  const metricsQuery = normalizeMetricsQuery({
+    from: input.from,
+    to: input.to,
+    bucketSeconds: input.bucketSeconds,
+  });
+
+  return listMonitorMetricsBuckets({
+    userId: input.userId,
+    monitorId: input.monitorId,
+    ...metricsQuery,
+  });
 }
 
 export async function updateHttpMonitor(

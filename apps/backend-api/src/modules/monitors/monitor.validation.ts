@@ -7,6 +7,11 @@ const MIN_TIMEOUT_MS = 1000;
 const MAX_TIMEOUT_MS = 30000;
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_EXPECTED_STATUS = 200;
+const DEFAULT_METRICS_WINDOW_MS = 24 * 60 * 60 * 1000;
+const MAX_METRICS_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const MIN_BUCKET_SECONDS = 60;
+const MAX_BUCKET_SECONDS = 24 * 60 * 60;
+const DEFAULT_BUCKET_SECONDS = 300;
 
 export function normalizeUrl(value: unknown) {
   if (typeof value !== 'string' || value.trim().length === 0) {
@@ -108,4 +113,56 @@ export function normalizeResultsLimit(value: unknown) {
   }
 
   return Math.min(limit, 200);
+}
+
+export function normalizeMetricsQuery(input: { from: unknown; to: unknown; bucketSeconds: unknown }) {
+  const to = normalizeMetricsDate(input.to, new Date());
+  const from = normalizeMetricsDate(input.from, new Date(to.getTime() - DEFAULT_METRICS_WINDOW_MS));
+  const bucketSeconds = normalizeBucketSeconds(input.bucketSeconds);
+
+  if (from >= to) {
+    throw new AppError('from must be before to');
+  }
+
+  if (to.getTime() - from.getTime() > MAX_METRICS_WINDOW_MS) {
+    throw new AppError('metrics range must be 30 days or less');
+  }
+
+  return {
+    from,
+    to,
+    bucketSeconds,
+  };
+}
+
+function normalizeMetricsDate(value: unknown, fallback: Date) {
+  if (value === undefined) {
+    return fallback;
+  }
+
+  if (typeof value !== 'string') {
+    throw new AppError('metrics dates must be ISO strings');
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new AppError('metrics dates must be valid ISO strings');
+  }
+
+  return date;
+}
+
+function normalizeBucketSeconds(value: unknown) {
+  if (value === undefined) {
+    return DEFAULT_BUCKET_SECONDS;
+  }
+
+  const bucketSeconds = Number(value);
+
+  if (!Number.isInteger(bucketSeconds) || bucketSeconds < MIN_BUCKET_SECONDS || bucketSeconds > MAX_BUCKET_SECONDS) {
+    throw new AppError(`bucketSeconds must be between ${MIN_BUCKET_SECONDS} and ${MAX_BUCKET_SECONDS}`);
+  }
+
+  return bucketSeconds;
 }
