@@ -1,0 +1,45 @@
+.card {
+  border-radius: 1rem;
+  padding: 0.75rem;
+  transition:
+    box-shadow 260ms ease,
+    transform 260ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgb(15 23 42 / 10%);
+}
+
+.teal {
+  background: linear-gradient(135deg, rgb(20 184 166 / 16%), rgb(52 211 153 / 10%));
+  color: var(--sp-teal);
+}
+
+.indigo {
+  background: linear-gradient(135deg, rgb(99 102 241 / 16%), rgb(56 189 248 / 10%));
+  color: var(--sp-plum);
+}
+
+.rose {
+  background: linear-gradient(135deg, rgb(244 63 94 / 16%), rgb(251 146 60 / 10%));
+  color: var(--sp-danger-text);
+}
+
+.title {
+  color: var(--sp-muted-strong);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.value {
+  margin-top: 0.25rem;
+  color: var(--sp-ink);
+  font-size: 1.35rem;
+  font-weight: 650;
+}
+
+.detail {
+  margin-top: 0.1rem;
+  font-size: 0.78rem;
+}

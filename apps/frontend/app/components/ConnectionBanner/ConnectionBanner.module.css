@@ -1,0 +1,75 @@
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid var(--sp-border);
+  border-radius: 8px;
+  background: var(--sp-surface-strong);
+  padding: 0.65rem 0.8rem;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 8%);
+}
+
+.banner[data-mode='live'] {
+  background: linear-gradient(135deg, rgb(209 250 229 / 78%), rgb(255 255 255 / 84%));
+}
+
+.banner[data-mode='error'] {
+  background: linear-gradient(135deg, rgb(255 228 230 / 78%), rgb(255 255 255 / 84%));
+}
+
+.label {
+  color: var(--sp-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.message {
+  margin-top: 0.15rem;
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 2.2rem;
+  border-radius: 8px;
+  padding: 0 1rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+  transition:
+    box-shadow 240ms ease,
+    transform 240ms ease,
+    background 240ms ease;
+}
+
+.primaryButton {
+  border: 0;
+  background: var(--sp-ink);
+  color: var(--sp-white);
+}
+
+.secondaryButton {
+  border: 1px solid var(--sp-border-strong);
+  background: var(--sp-white);
+  color: var(--sp-ink);
+}
+
+.primaryButton:hover,
+.secondaryButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgb(15 23 42 / 12%);
+}
+
+@media (min-width: 768px) {
+  .banner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

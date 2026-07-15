@@ -1,0 +1,75 @@
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid var(--sp-border);
+  border-radius: 1rem;
+  background: var(--sp-surface);
+  padding: 0.75rem;
+}
+
+.body {
+  min-width: 0;
+}
+
+.channel,
+.event {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channel {
+  color: var(--sp-ink);
+  font-weight: 650;
+}
+
+.event {
+  margin-top: 0.25rem;
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+}
+
+.meta {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sent {
+  background: var(--sp-success-bg);
+  color: var(--sp-success-text);
+}
+
+.skipped {
+  background: var(--sp-cream-strong);
+  color: var(--sp-muted-strong);
+}
+
+.failed {
+  background: var(--sp-danger-bg);
+  color: var(--sp-danger-text);
+}
+
+.time {
+  display: none;
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+}
+
+@media (min-width: 640px) {
+  .time {
+    display: inline;
+  }
+}

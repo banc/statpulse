@@ -1,0 +1,132 @@
+.card {
+  border: 1px solid var(--sp-border);
+  border-radius: 18px;
+  background: var(--sp-ink);
+  padding: 1rem;
+  color: var(--sp-white);
+  box-shadow: 0 24px 80px var(--sp-shadow-strong);
+  animation: rise-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.description {
+  margin-top: 0.25rem;
+  color: rgb(255 255 255 / 55%);
+  font-size: 0.78rem;
+}
+
+.badge {
+  border-radius: 8px;
+  background: var(--sp-lime);
+  padding: 0.25rem 0.75rem;
+  color: var(--sp-ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.form {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  color: rgb(255 255 255 / 75%);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.control {
+  height: 2.45rem;
+  min-width: 0;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 10%);
+  padding: 0 0.75rem;
+  color: var(--sp-white);
+  outline: none;
+  transition:
+    background 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.control:focus {
+  border-color: var(--sp-lime);
+  background: rgb(255 255 255 / 15%);
+  box-shadow: 0 0 0 3px rgb(103 232 249 / 16%);
+}
+
+.control::placeholder {
+  color: rgb(255 255 255 / 35%);
+}
+
+.submitButton {
+  height: 2.55rem;
+  border: 0;
+  border-radius: 12px;
+  margin-top: 0.25rem;
+  background: linear-gradient(90deg, var(--sp-lime), var(--sp-mint));
+  color: var(--sp-ink);
+  font-weight: 700;
+  box-shadow: 0 16px 34px rgb(34 211 238 / 20%);
+  transition:
+    box-shadow 260ms ease,
+    transform 260ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 42px rgb(34 211 238 / 30%);
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.error {
+  border-radius: 12px;
+  background: rgb(255 228 230 / 12%);
+  padding: 0.75rem;
+  color: var(--sp-danger-bg);
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,25 @@
+.stat {
+  min-width: 0;
+  border-radius: 0.8rem;
+  background: rgb(241 245 249 / 80%);
+  padding: 0.4rem 0.55rem;
+}
+
+.label,
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--sp-muted);
+  font-size: 0.68rem;
+}
+
+.value {
+  margin-top: 0.15rem;
+  color: var(--sp-ink);
+  font-size: 0.78rem;
+  font-weight: 650;
+}

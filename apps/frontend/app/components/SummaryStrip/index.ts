@@ -1,0 +1,1 @@
+export { SummaryStrip } from './SummaryStrip';

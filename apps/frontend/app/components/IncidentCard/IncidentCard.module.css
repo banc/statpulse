@@ -1,0 +1,72 @@
+.card {
+  border: 1px solid var(--sp-border);
+  border-radius: 1rem;
+  background: var(--sp-surface);
+  padding: 0.75rem;
+  transition:
+    box-shadow 260ms ease,
+    transform 260ms ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgb(15 23 42 / 10%);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.monitor {
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.title {
+  margin-top: 0.25rem;
+  color: var(--sp-ink);
+  font-weight: 650;
+}
+
+.badge {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.open {
+  background: var(--sp-danger-bg);
+  color: var(--sp-danger-text);
+}
+
+.resolved {
+  background: var(--sp-success-bg);
+  color: var(--sp-success-text);
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .metaGrid {
+    max-width: 24rem;
+  }
+}

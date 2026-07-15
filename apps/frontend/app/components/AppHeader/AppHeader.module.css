@@ -1,0 +1,239 @@
+.sidebar {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  background: #123d5d;
+  color: #d8e8f2;
+  box-shadow: 10px 0 30px rgb(18 61 93 / 18%);
+}
+
+.profile {
+  display: grid;
+  justify-items: center;
+  padding: 2rem 1.1rem 1.3rem;
+  text-align: center;
+}
+
+.avatar {
+  position: relative;
+  display: grid;
+  width: 5.75rem;
+  height: 5.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #f7fbff;
+  box-shadow:
+    0 16px 24px rgb(0 0 0 / 22%),
+    inset 0 0 0 0.7rem #0f3857;
+}
+
+.avatarHead {
+  position: absolute;
+  top: 1.55rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 50%;
+  background: #123d5d;
+}
+
+.avatarBody {
+  position: absolute;
+  bottom: 1.2rem;
+  width: 2.65rem;
+  height: 2rem;
+  border-radius: 50% 50% 42% 42%;
+  background: #123d5d;
+}
+
+.name {
+  margin-top: 1.15rem;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.email {
+  margin-top: 0.35rem;
+  color: rgb(216 232 242 / 72%);
+  font-size: 0.72rem;
+}
+
+.navigation {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.navigationItem {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  border: 0;
+  background: transparent;
+  padding: 0.58rem 0;
+  color: rgb(216 232 242 / 68%);
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.navigationItemActive,
+.navigationItem:hover {
+  color: #ffffff;
+}
+
+.icon {
+  position: relative;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.home::before {
+  position: absolute;
+  inset: 0.34rem 0.12rem 0.12rem;
+  background: currentColor;
+  content: '';
+}
+
+.home::after {
+  position: absolute;
+  top: 0.08rem;
+  left: 0.17rem;
+  width: 0.68rem;
+  height: 0.68rem;
+  background: currentColor;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.file::before {
+  position: absolute;
+  inset: 0.25rem 0.1rem 0.2rem;
+  border-radius: 0.08rem;
+  background: currentColor;
+  content: '';
+}
+
+.file::after {
+  position: absolute;
+  top: 0.18rem;
+  left: 0.18rem;
+  width: 0.42rem;
+  height: 0.2rem;
+  border-radius: 0.05rem 0.05rem 0 0;
+  background: currentColor;
+  content: '';
+}
+
+.mail::before {
+  position: absolute;
+  inset: 0.28rem 0.12rem;
+  border: 0.14rem solid currentColor;
+  content: '';
+}
+
+.mail::after {
+  position: absolute;
+  top: 0.41rem;
+  left: 0.24rem;
+  width: 0.52rem;
+  height: 0.52rem;
+  border-right: 0.12rem solid currentColor;
+  border-bottom: 0.12rem solid currentColor;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.alert::before {
+  position: absolute;
+  top: 0.22rem;
+  left: 0.22rem;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 0.12rem 0.12rem 0.45rem 0.12rem;
+  background: currentColor;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.pin::before {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.27rem;
+  width: 0.48rem;
+  height: 0.48rem;
+  border: 0.18rem solid currentColor;
+  border-radius: 50% 50% 50% 0;
+  content: '';
+  transform: rotate(-45deg);
+}
+
+.chart::before {
+  position: absolute;
+  inset: 0.16rem;
+  border-radius: 50%;
+  background:
+    conic-gradient(currentColor 0 75%, transparent 75% 100%);
+  content: '';
+}
+
+.chart::after {
+  position: absolute;
+  top: 0.14rem;
+  right: 0.1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0 100% 0 0;
+  background: #123d5d;
+  content: '';
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    min-height: auto;
+  }
+
+  .profile {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    column-gap: 0.8rem;
+    padding: 0.8rem;
+    text-align: left;
+  }
+
+  .avatar {
+    grid-row: span 2;
+    width: 3.4rem;
+    height: 3.4rem;
+    box-shadow: inset 0 0 0 0.42rem #0f3857;
+  }
+
+  .avatarHead {
+    top: 0.92rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .avatarBody {
+    bottom: 0.72rem;
+    width: 1.55rem;
+    height: 1.1rem;
+  }
+
+  .name {
+    margin-top: 0.35rem;
+  }
+
+  .navigation {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 0.8rem 0.8rem;
+  }
+
+  .navigationItem {
+    grid-template-columns: 1rem auto;
+    flex: 0 0 auto;
+  }
+}

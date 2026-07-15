@@ -1,0 +1,25 @@
+.tile {
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 10%);
+  padding: 0.6rem 0.7rem;
+}
+
+.accent {
+  background: var(--sp-white);
+  color: var(--sp-ink);
+}
+
+.label {
+  color: rgb(255 255 255 / 60%);
+  font-size: 0.75rem;
+}
+
+.accent .label {
+  color: var(--sp-muted);
+}
+
+.value {
+  margin-top: 0.15rem;
+  font-size: 1.05rem;
+  font-weight: 650;
+}

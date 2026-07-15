@@ -1,0 +1,230 @@
+.board {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  height: 100%;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.eyebrow {
+  color: var(--sp-teal);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  margin-top: 0.15rem;
+  color: var(--sp-ink);
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.account {
+  max-width: 16rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 0.55rem 0.9rem;
+  color: var(--sp-muted-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgb(16 42 67 / 10%);
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.newMonitorButton {
+  border: 0;
+  border-radius: 999px;
+  background: var(--sp-ink);
+  color: #ffffff;
+  font-weight: 800;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.newMonitorButton {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  font-size: 0.82rem;
+}
+
+.newMonitorButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgb(15 23 42 / 16%);
+}
+
+.overviewGrid,
+.workspaceGrid,
+.sideRail,
+.monitorsPage,
+.focusPage,
+.graphPage,
+.graphColumn {
+  display: grid;
+  gap: 1rem;
+}
+
+.scrollArea {
+  display: grid;
+  min-height: 0;
+  gap: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.monitorColumn,
+.detailColumn {
+  min-width: 0;
+}
+
+.sideRail {
+  align-content: start;
+}
+
+.metricGrid,
+.channelGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.statCard,
+.channelCard {
+  border: 1px solid var(--sp-border);
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: 0 20px 50px var(--sp-shadow);
+}
+
+.statCard p,
+.channelType {
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.statCard strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--sp-ink);
+  font-size: 1.9rem;
+  font-weight: 750;
+}
+
+.statCard span,
+.channelCard span {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--sp-muted);
+  font-size: 0.82rem;
+}
+
+.channelCard h2 {
+  margin-top: 0.35rem;
+  color: var(--sp-ink);
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.modalBackdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  overflow-y: auto;
+  place-items: center;
+  background: rgb(15 23 42 / 54%);
+  padding: 1rem;
+}
+
+.modalPanel {
+  position: relative;
+  width: min(28rem, 100%);
+}
+
+.modalClose {
+  position: absolute;
+  z-index: 2;
+  top: 0.8rem;
+  right: 0.8rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 14%);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+@media (min-width: 1024px) {
+  .workspaceGrid {
+    grid-template-columns: minmax(18rem, 0.76fr) minmax(0, 1.36fr) minmax(19rem, 0.86fr);
+    align-items: start;
+  }
+
+  .monitorsPage {
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(0, 1.4fr);
+    align-items: start;
+  }
+
+  .graphPage {
+    grid-template-columns: minmax(18rem, 0.7fr) minmax(0, 1.5fr);
+    align-items: start;
+  }
+
+  .metricGrid,
+  .channelGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .channelGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 0.85rem 0.85rem 0;
+  }
+
+  .scrollArea {
+    padding: 0 0.85rem 0.85rem;
+  }
+
+  .topActions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .account,
+  .newMonitorButton {
+    max-width: none;
+    width: 100%;
+  }
+}
