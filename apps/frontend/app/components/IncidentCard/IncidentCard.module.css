@@ -1,16 +1,16 @@
 .card {
   border: 1px solid var(--sp-border);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: var(--sp-surface);
   padding: 0.75rem;
   transition:
-    box-shadow 260ms ease,
-    transform 260ms ease;
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
 }
 
 .card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgb(15 23 42 / 10%);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .header {

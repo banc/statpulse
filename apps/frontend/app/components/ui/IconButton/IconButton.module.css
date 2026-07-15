@@ -1,0 +1,36 @@
+.button {
+  display: grid;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid var(--sp-border);
+  border-radius: var(--button-radius);
+  background: var(--sp-surface-soft);
+  color: var(--sp-ink);
+  transition:
+    background var(--transition-base),
+    box-shadow var(--transition-base),
+    color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--sp-surface-strong);
+  box-shadow: 0 12px 24px rgb(15 23 42 / 8%);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.button svg {
+  width: 1rem;
+  height: 1rem;
+}

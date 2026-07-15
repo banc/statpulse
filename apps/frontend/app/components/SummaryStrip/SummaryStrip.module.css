@@ -1,6 +1,6 @@
 .strip {
   border: 1px solid var(--sp-border);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: linear-gradient(135deg, var(--sp-surface-strong), var(--sp-cream));
   padding: 0.75rem;
 }

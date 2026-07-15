@@ -1,0 +1,35 @@
+.status {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.38rem;
+  color: var(--sp-muted-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status::before {
+  width: 0.43rem;
+  height: 0.43rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
+
+.up {
+  color: var(--sp-success-text);
+}
+
+.unknown {
+  color: var(--sp-muted-strong);
+}
+
+.degraded {
+  color: var(--sp-warning-text);
+}
+
+.down {
+  color: var(--sp-danger-text);
+}

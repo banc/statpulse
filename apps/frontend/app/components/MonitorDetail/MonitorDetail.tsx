@@ -1,11 +1,14 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Monitor } from '../../lib/dashboard-types';
+import { MonitorFormCard } from '../MonitorForm';
 import { MiniStat } from '../MiniStat';
 import { ResponseChart } from '../ResponseChart';
 import { StatusPill } from '../StatusPill';
 import { SummaryStrip } from '../SummaryStrip';
+import { Button, IconButton, Panel } from '../ui';
 import styles from './MonitorDetail.module.css';
 
 type MonitorDetailProps = {
@@ -23,24 +26,47 @@ export type MonitorUpdateInput = {
   expectedStatus: number;
   intervalSeconds: number;
   timeoutMs: number;
-  isActive: boolean;
+  isActive?: boolean;
 };
 
 export function MonitorDetail({ monitor, isSaving, errorMessage, onUpdate, onDelete }: MonitorDetailProps) {
+  const [isEditingSettings, setIsEditingSettings] = useState(false);
+
+  useEffect(() => {
+    if (!isEditingSettings) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsEditingSettings(false);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isEditingSettings]);
+
   if (!monitor) {
     return (
-      <section className={styles.panel}>
+      <Panel className={styles.panel}>
         <div className={styles.emptyState}>
           <p className={styles.emptyEyebrow}>No monitor selected</p>
           <h2 className={styles.title}>Create a monitor to unlock details, charts, and incidents.</h2>
           <p className={styles.url}>The dashboard will update as soon as the first check result arrives.</p>
         </div>
-      </section>
+      </Panel>
     );
   }
 
   return (
-    <section className={styles.panel}>
+    <Panel className={styles.panel}>
       <div className={styles.header}>
         <div className={styles.identity}>
           <div className={styles.titleRow}>
@@ -49,10 +75,15 @@ export function MonitorDetail({ monitor, isSaving, errorMessage, onUpdate, onDel
           </div>
           <p className={styles.url}>{monitor.url}</p>
         </div>
-        <div className={styles.metaGrid}>
-          <MiniStat label="Method" value={monitor.method} />
-          <MiniStat label="Expect" value={String(monitor.expectedStatus)} />
-          <MiniStat label="Region" value={monitor.region} />
+        <div className={styles.headerAside}>
+          <IconButton type="button" aria-label="Edit monitor" onClick={() => setIsEditingSettings(true)}>
+            <EditIcon />
+          </IconButton>
+          <div className={styles.metaGrid}>
+            <MiniStat label="Method" value={monitor.method} />
+            <MiniStat label="Expect" value={String(monitor.expectedStatus)} />
+            <MiniStat label="Region" value={monitor.region} />
+          </div>
         </div>
       </div>
 
@@ -64,15 +95,44 @@ export function MonitorDetail({ monitor, isSaving, errorMessage, onUpdate, onDel
 
       <ResponseChart monitorId={monitor.id} checks={monitor.checks} />
 
-      <MonitorSettings
-        key={monitor.id}
-        monitor={monitor}
-        isSaving={isSaving}
-        errorMessage={errorMessage}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    </section>
+      {isEditingSettings && typeof document !== 'undefined'
+        ? createPortal(
+            <div className={styles.modalBackdrop} role="presentation" onMouseDown={() => setIsEditingSettings(false)}>
+              <div
+                aria-modal="true"
+                className={styles.modalPanel}
+                role="dialog"
+                aria-labelledby="edit-monitor-title"
+                onMouseDown={(event) => event.stopPropagation()}
+              >
+                <IconButton
+                  className={styles.modalClose}
+                  type="button"
+                  aria-label="Close monitor settings"
+                  onClick={() => setIsEditingSettings(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <MonitorSettings
+                  key={monitor.id}
+                  monitor={monitor}
+                  isSaving={isSaving}
+                  errorMessage={errorMessage}
+                  onUpdate={async (id, input) => {
+                    await onUpdate(id, input);
+                    setIsEditingSettings(false);
+                  }}
+                  onDelete={async (id) => {
+                    await onDelete(id);
+                    setIsEditingSettings(false);
+                  }}
+                />
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
+    </Panel>
   );
 }
 
@@ -85,112 +145,68 @@ type MonitorSettingsProps = {
 };
 
 function MonitorSettings({ monitor, isSaving, errorMessage, onUpdate, onDelete }: MonitorSettingsProps) {
-  const [name, setName] = useState(monitor.name);
-  const [url, setUrl] = useState(monitor.url);
-  const [method, setMethod] = useState<MonitorUpdateInput['method']>(monitor.method as MonitorUpdateInput['method']);
-  const [expectedStatus, setExpectedStatus] = useState(monitor.expectedStatus);
-  const [intervalSeconds, setIntervalSeconds] = useState(monitor.intervalSeconds ?? 60);
-  const [timeoutMs, setTimeoutMs] = useState(monitor.timeoutMs ?? 10000);
-  const [isActive, setIsActive] = useState(monitor.isActive ?? true);
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    await onUpdate(monitor.id, {
-      name,
-      url,
-      method,
-      expectedStatus,
-      intervalSeconds,
-      timeoutMs,
-      isActive,
-    });
-  }
-
   return (
-    <form className={styles.settingsForm} onSubmit={handleSubmit}>
-      <div className={styles.settingsHeader}>
-        <div>
-          <h3 className={styles.settingsTitle}>Monitor settings</h3>
-          <p className={styles.settingsDescription}>Control schedule, target, and expected response.</p>
-        </div>
-        <label className={styles.toggle}>
-          <input checked={isActive} type="checkbox" onChange={(event) => setIsActive(event.target.checked)} />
-          Active
-        </label>
-      </div>
-      <div className={styles.formGrid}>
-        <label className={styles.field}>
-          Name
-          <input className={styles.control} value={name} onChange={(event) => setName(event.target.value)} />
-        </label>
-        <label className={styles.field}>
-          URL
-          <input
-            className={styles.control}
-            required
-            type="url"
-            value={url}
-            onChange={(event) => setUrl(event.target.value)}
-          />
-        </label>
-        <label className={styles.field}>
-          Method
-          <select
-            className={styles.control}
-            value={method}
-            onChange={(event) => setMethod(event.target.value as MonitorUpdateInput['method'])}
-          >
-            <option>GET</option>
-            <option>HEAD</option>
-          </select>
-        </label>
-        <label className={styles.field}>
-          Status
-          <input
-            className={styles.control}
-            inputMode="numeric"
-            max={599}
-            min={100}
-            type="number"
-            value={expectedStatus}
-            onChange={(event) => setExpectedStatus(Number(event.target.value))}
-          />
-        </label>
-        <label className={styles.field}>
-          Interval
-          <input
-            className={styles.control}
-            inputMode="numeric"
-            min={30}
-            type="number"
-            value={intervalSeconds}
-            onChange={(event) => setIntervalSeconds(Number(event.target.value))}
-          />
-        </label>
-        <label className={styles.field}>
-          Timeout
-          <input
-            className={styles.control}
-            inputMode="numeric"
-            max={30000}
-            min={1000}
-            step={500}
-            type="number"
-            value={timeoutMs}
-            onChange={(event) => setTimeoutMs(Number(event.target.value))}
-          />
-        </label>
-      </div>
-      {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
-      <div className={styles.formActions}>
-        <button className={styles.saveButton} type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save changes'}
-        </button>
-        <button className={styles.deleteButton} type="button" disabled={isSaving} onClick={() => void onDelete(monitor.id)}>
-          Delete
-        </button>
-      </div>
-    </form>
+    <MonitorFormCard
+      title="Edit monitor"
+      description="Update schedule, target, and expected response."
+      initialValues={{
+        name: monitor.name,
+        url: monitor.url,
+        method: monitor.method as MonitorUpdateInput['method'],
+        expectedStatus: monitor.expectedStatus,
+        intervalSeconds: monitor.intervalSeconds ?? 60,
+        timeoutMs: monitor.timeoutMs ?? 10000,
+      }}
+      isSubmitting={isSaving}
+      errorMessage={errorMessage}
+      submitLabel="Save changes"
+      submittingLabel="Saving..."
+      onSubmit={(input) => onUpdate(monitor.id, input)}
+      footerAction={
+        <Button
+          className={styles.deleteButton}
+          type="button"
+          variant="danger"
+          disabled={isSaving}
+          onClick={() => void onDelete(monitor.id)}
+        >
+        Delete
+      </Button>
+      }
+    />
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+    </svg>
   );
 }

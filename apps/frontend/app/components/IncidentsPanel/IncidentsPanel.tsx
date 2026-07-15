@@ -1,5 +1,6 @@
 import type { Incident } from '../../lib/dashboard-types';
 import { IncidentCard } from '../IncidentCard';
+import { Panel } from '../ui';
 import styles from './IncidentsPanel.module.css';
 
 type IncidentsPanelProps = {
@@ -10,7 +11,7 @@ export function IncidentsPanel({ incidents }: IncidentsPanelProps) {
   const openIncidents = incidents.filter((incident) => incident.status === 'open').length;
 
   return (
-    <section className={styles.panel}>
+    <Panel className={styles.panel}>
       <div className={styles.header}>
         <div>
           <h2 className={styles.title}>Incidents</h2>
@@ -25,6 +26,6 @@ export function IncidentsPanel({ incidents }: IncidentsPanelProps) {
           <div className={styles.emptyState}>No incidents for the selected monitor.</div>
         )}
       </div>
-    </section>
+    </Panel>
   );
 }

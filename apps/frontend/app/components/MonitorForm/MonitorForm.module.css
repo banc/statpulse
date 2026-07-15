@@ -1,0 +1,127 @@
+.card {
+  background: var(--sp-surface);
+  padding: 1.35rem;
+  color: var(--sp-ink);
+  box-shadow: var(--shadow-popover);
+  animation: rise-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 16px;
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.description {
+  margin-top: 0.25rem;
+  color: var(--sp-muted);
+  font-size: 0.78rem;
+}
+
+.badge {
+  border-radius: 4px;
+  background: var(--sp-success-bg);
+  padding: 0.25rem 0.75rem;
+  color: var(--sp-teal);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.form {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--sp-muted-strong);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.control {
+  height: 2.65rem;
+  min-width: 0;
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+  background: var(--sp-surface-soft);
+  padding: 0 0.75rem;
+  color: var(--sp-ink);
+  outline: none;
+  transition:
+    background var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.control:focus {
+  border-color: #0070d9;
+  background: var(--sp-surface-strong);
+  box-shadow: var(--focus-ring);
+}
+
+.control::placeholder {
+  color: var(--sp-muted);
+}
+
+.error {
+  border: 1px solid rgb(244 63 94 / 14%);
+  border-radius: 6px;
+  background: var(--sp-danger-bg);
+  padding: 0.75rem;
+  color: var(--sp-danger-text);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.35rem;
+}
+
+.submitButton {
+  min-height: var(--button-height);
+  flex: 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .fieldGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 1.5rem;
+  }
+}

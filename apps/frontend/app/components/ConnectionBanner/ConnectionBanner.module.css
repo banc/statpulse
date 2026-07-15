@@ -3,18 +3,18 @@
   flex-direction: column;
   gap: 0.5rem;
   border: 1px solid var(--sp-border);
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--sp-surface-strong);
   padding: 0.65rem 0.8rem;
   box-shadow: 0 12px 32px rgb(15 23 42 / 8%);
 }
 
 .banner[data-mode='live'] {
-  background: linear-gradient(135deg, rgb(209 250 229 / 78%), rgb(255 255 255 / 84%));
+  background: linear-gradient(135deg, rgb(34 197 94 / 13%), var(--sp-surface));
 }
 
 .banner[data-mode='error'] {
-  background: linear-gradient(135deg, rgb(255 228 230 / 78%), rgb(255 255 255 / 84%));
+  background: linear-gradient(135deg, rgb(248 113 113 / 13%), var(--sp-surface));
 }
 
 .label {
@@ -37,10 +37,10 @@
 
 .primaryButton,
 .secondaryButton {
-  min-height: 2.2rem;
-  border-radius: 8px;
-  padding: 0 1rem;
-  font-size: 0.78rem;
+  min-height: var(--button-height);
+  border-radius: var(--button-radius);
+  padding: 0 var(--button-padding-x);
+  font-size: 0.86rem;
   font-weight: 750;
   transition:
     box-shadow 240ms ease,
@@ -49,20 +49,19 @@
 }
 
 .primaryButton {
-  border: 0;
-  background: var(--sp-ink);
-  color: var(--sp-white);
+  border: 1px solid var(--sp-teal);
+  background: var(--gradient-accent);
+  color: #ffffff;
 }
 
 .secondaryButton {
   border: 1px solid var(--sp-border-strong);
-  background: var(--sp-white);
+  background: var(--sp-surface-soft);
   color: var(--sp-ink);
 }
 
 .primaryButton:hover,
 .secondaryButton:hover {
-  transform: translateY(-1px);
   box-shadow: 0 10px 24px rgb(15 23 42 / 12%);
 }
 

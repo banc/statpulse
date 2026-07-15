@@ -96,7 +96,7 @@ export async function updateMonitor(_token: string, id: string, input: Partial<N
       ...monitor,
       ...input,
       name: input.name?.trim() || monitor.name,
-      status: input.isActive === false ? 'UNKNOWN' : monitor.status,
+      status: monitor.status,
       lastChecked: input.isActive === false ? 'paused' : monitor.lastChecked,
     };
 

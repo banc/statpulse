@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import { Button } from '../ui';
 import styles from './AuthCard.module.css';
 
 type AuthCardProps = {
@@ -72,9 +73,9 @@ export function AuthCard({ isSubmitting, errorMessage, onLogin, onRegister }: Au
           />
         </label>
         {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
-        <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
+        <Button className={styles.submitButton} type="submit" variant="primary" disabled={isSubmitting}>
           {isSubmitting ? 'Connecting...' : mode === 'login' ? 'Login' : 'Create account'}
-        </button>
+        </Button>
       </form>
     </section>
   );

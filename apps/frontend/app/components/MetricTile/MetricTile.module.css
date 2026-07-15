@@ -1,25 +1,27 @@
 .tile {
-  border-radius: 0.9rem;
-  background: rgb(255 255 255 / 10%);
-  padding: 0.6rem 0.7rem;
-}
-
-.accent {
-  background: var(--sp-white);
+  border-left: 1px solid var(--sp-border-strong);
+  padding: 0.15rem 0.7rem;
   color: var(--sp-ink);
 }
 
+.accent {
+  color: var(--sp-teal);
+}
+
 .label {
-  color: rgb(255 255 255 / 60%);
-  font-size: 0.75rem;
+  color: var(--sp-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .accent .label {
-  color: var(--sp-muted);
+  color: var(--sp-teal);
 }
 
 .value {
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
   font-size: 1.05rem;
-  font-weight: 650;
+  font-weight: 800;
 }

@@ -1,8 +1,9 @@
 .screen {
   height: 100vh;
   overflow: hidden;
-  background: #cfd8e2;
-  color: #111827;
+  background: #f3f4f6;
+  color: var(--sp-ink);
+  padding: 0;
 }
 
 .container {
@@ -12,10 +13,11 @@
   max-width: none;
   height: 100vh;
   gap: 0;
-  margin: 0;
+  margin: 0 auto;
   overflow: hidden;
+  border: 1px solid var(--sp-border);
   border-radius: 0;
-  background: #edf1f6;
+  background: #f3f4f6;
   box-shadow: none;
 }
 
@@ -30,7 +32,7 @@
 
 @media (min-width: 1024px) {
   .container {
-    grid-template-columns: 12.8rem minmax(0, 1fr);
+    grid-template-columns: 16.25rem minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
     align-items: stretch;
   }
@@ -39,5 +41,24 @@
     grid-row: 1 / span 2;
     height: 100vh;
     overflow-y: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container > :first-child {
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .screen {
+    padding: 0;
+  }
+
+  .container {
+    height: 100vh;
+    border-radius: 0;
   }
 }

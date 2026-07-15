@@ -1,34 +1,56 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --sp-ink: #0f172a;
-  --sp-ink-deep: #0f172a;
+  --background: #f3f4f6;
+  --foreground: #111827;
+  --sp-ink: #111827;
+  --sp-ink-deep: #020617;
+  --sp-ink-soft: #374151;
   --sp-plum: #6366f1;
   --sp-plum-soft: #818cf8;
   --sp-violet: #6366f1;
-  --sp-lime: #67e8f9;
-  --sp-mint: #6ee7b7;
-  --sp-teal: #0f766e;
-  --sp-cream: #f8fafc;
-  --sp-cream-strong: #f1f5f9;
-  --sp-surface: rgb(255 255 255 / 82%);
-  --sp-surface-soft: rgb(255 255 255 / 70%);
+  --sp-lime: #16a34a;
+  --sp-mint: #10b981;
+  --sp-teal: #059669;
+  --sp-cyan: #0070d9;
+  --sp-cream: #f3f4f6;
+  --sp-cream-strong: #eef0f3;
+  --sp-surface: #ffffff;
+  --sp-surface-soft: #f9fafb;
   --sp-surface-strong: #ffffff;
-  --sp-border: rgb(255 255 255 / 70%);
-  --sp-border-strong: #e2e8f0;
-  --sp-muted: #64748b;
-  --sp-muted-strong: #475569;
+  --sp-border: #e5e7eb;
+  --sp-border-strong: #d1d5db;
+  --sp-muted: #6b7280;
+  --sp-muted-strong: #4b5563;
   --sp-white: #ffffff;
-  --sp-success-bg: #ecfdf5;
-  --sp-success-text: #047857;
-  --sp-warning-bg: #fffbeb;
+  --sp-sidebar: #ffffff;
+  --sp-sidebar-deep: #f9fafb;
+  --sp-success-bg: #dcfce7;
+  --sp-success-text: #059669;
+  --sp-warning-bg: #fef3c7;
   --sp-warning-text: #b45309;
-  --sp-danger-bg: #ffe4e6;
-  --sp-danger-text: #be123c;
-  --sp-shadow: rgb(15 23 42 / 5%);
-  --sp-shadow-strong: rgb(15 23 42 / 22%);
+  --sp-danger-bg: #fee2e2;
+  --sp-danger-text: #ef4444;
+  --sp-shadow: rgb(15 23 42 / 7%);
+  --sp-shadow-strong: rgb(15 23 42 / 16%);
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --button-height: 2.4rem;
+  --button-icon-size: 2.4rem;
+  --button-radius: 8px;
+  --button-padding-x: 0.85rem;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 8%), 0 10px 24px rgb(15 23 42 / 6%);
+  --shadow-card-hover: 0 4px 8px rgb(15 23 42 / 10%);
+  --shadow-popover: 0 24px 70px rgb(15 23 42 / 20%);
+  --focus-ring: 0 0 0 3px rgb(0 112 217 / 16%);
+  --gradient-accent: linear-gradient(135deg, #0b7fe8, #0070d9);
+  --gradient-accent-strong: linear-gradient(135deg, var(--sp-lime), var(--sp-mint));
+  --transition-fast: 180ms ease;
+  --transition-base: 240ms ease;
 }
 
 @theme inline {
@@ -61,6 +83,29 @@ button {
 ::selection {
   background: #99f6e4;
   color: var(--sp-ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 @media (prefers-reduced-motion: reduce) {
